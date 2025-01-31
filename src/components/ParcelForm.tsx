@@ -27,9 +27,41 @@ const ParcelForm = ({ initialData = null }) => {
     noOfParcels: initialData?.noOfParcels || "",
     itemName: initialData?.itemName || "",
     quantity: initialData?.quantity || "",
-    itemPhoto: null,
-    parcelPhoto: null,
+    itemPhoto: initialData?.itemPhoto || null,
+    parcelPhoto: initialData?.parcelPhoto || null,
   });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'itemPhoto' | 'parcelPhoto') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const base64String = await convertToBase64(file);
+        setFormData(prev => ({
+          ...prev,
+          [type]: base64String
+        }));
+        toast({
+          title: "Success",
+          description: `${type === 'itemPhoto' ? 'Item' : 'Parcel'} photo uploaded successfully`,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to upload photo",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -149,10 +181,22 @@ const ParcelForm = ({ initialData = null }) => {
           <div className="flex items-center justify-center w-full">
             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                <p className="text-sm text-gray-500">Click to upload item photo</p>
+                {formData.itemPhoto ? (
+                  <img src={formData.itemPhoto} alt="Item" className="h-20 w-20 object-cover" />
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                    <p className="text-sm text-gray-500">Click to upload item photo</p>
+                  </>
+                )}
               </div>
-              <input id="itemPhoto" type="file" className="hidden" accept="image/*" />
+              <input 
+                id="itemPhoto" 
+                type="file" 
+                className="hidden" 
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, 'itemPhoto')}
+              />
             </label>
           </div>
         </div>
@@ -162,10 +206,22 @@ const ParcelForm = ({ initialData = null }) => {
           <div className="flex items-center justify-center w-full">
             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                <p className="text-sm text-gray-500">Click to upload parcel photo</p>
+                {formData.parcelPhoto ? (
+                  <img src={formData.parcelPhoto} alt="Parcel" className="h-20 w-20 object-cover" />
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                    <p className="text-sm text-gray-500">Click to upload parcel photo</p>
+                  </>
+                )}
               </div>
-              <input id="parcelPhoto" type="file" className="hidden" accept="image/*" />
+              <input 
+                id="parcelPhoto" 
+                type="file" 
+                className="hidden" 
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, 'parcelPhoto')}
+              />
             </label>
           </div>
         </div>
