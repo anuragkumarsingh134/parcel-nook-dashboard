@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,28 +10,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
-
-// Mock data for initial development
-const mockData = [
-  {
-    id: 1,
-    lrNo: "LR001",
-    date: "2024-03-20",
-    noOfParcels: 3,
-    itemName: "Electronics",
-    quantity: 10,
-  },
-  {
-    id: 2,
-    lrNo: "LR002",
-    date: "2024-03-21",
-    noOfParcels: 2,
-    itemName: "Books",
-    quantity: 20,
-  },
-];
+import type { Parcel } from "./ParcelForm";
 
 const ParcelTable = () => {
+  const [parcels, setParcels] = useState<Parcel[]>([]);
+
+  useEffect(() => {
+    // Load parcels from localStorage
+    const storedParcels = JSON.parse(localStorage.getItem('parcels') || '[]');
+    setParcels(storedParcels);
+  }, []);
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -45,7 +35,7 @@ const ParcelTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockData.map((parcel) => (
+          {parcels.map((parcel) => (
             <TableRow key={parcel.id}>
               <TableCell>{parcel.lrNo}</TableCell>
               <TableCell>{parcel.date}</TableCell>

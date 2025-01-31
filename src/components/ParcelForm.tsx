@@ -4,9 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Upload } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+
+// Define the Parcel type
+export type Parcel = {
+  id: number;
+  lrNo: string;
+  date: string;
+  noOfParcels: string;
+  itemName: string;
+  quantity: string;
+  itemPhoto: string | null;
+  parcelPhoto: string | null;
+};
 
 const ParcelForm = ({ initialData = null }) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     lrNo: initialData?.lrNo || "",
     date: initialData?.date || "",
@@ -19,7 +33,36 @@ const ParcelForm = ({ initialData = null }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
+    
+    // Get existing parcels from localStorage
+    const existingParcels = JSON.parse(localStorage.getItem('parcels') || '[]');
+    
+    // Create new parcel object
+    const newParcel = {
+      id: initialData?.id || Date.now(), // Use existing ID or create new one
+      ...formData
+    };
+
+    if (initialData) {
+      // Update existing parcel
+      const updatedParcels = existingParcels.map((parcel) =>
+        parcel.id === initialData.id ? newParcel : parcel
+      );
+      localStorage.setItem('parcels', JSON.stringify(updatedParcels));
+      toast({
+        title: "Success",
+        description: "Parcel updated successfully",
+      });
+    } else {
+      // Add new parcel
+      const updatedParcels = [...existingParcels, newParcel];
+      localStorage.setItem('parcels', JSON.stringify(updatedParcels));
+      toast({
+        title: "Success",
+        description: "Parcel added successfully",
+      });
+    }
+
     navigate("/dashboard");
   };
 
