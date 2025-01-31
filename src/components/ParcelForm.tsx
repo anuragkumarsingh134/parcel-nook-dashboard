@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,14 +22,29 @@ const ParcelForm = ({ initialData = null }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    lrNo: initialData?.lrNo || "",
-    date: initialData?.date || "",
-    noOfParcels: initialData?.noOfParcels || "",
-    itemName: initialData?.itemName || "",
-    quantity: initialData?.quantity || "",
-    itemPhoto: initialData?.itemPhoto || null,
-    parcelPhoto: initialData?.parcelPhoto || null,
+    lrNo: "",
+    date: "",
+    noOfParcels: "",
+    itemName: "",
+    quantity: "",
+    itemPhoto: null,
+    parcelPhoto: null,
   });
+
+  // Load initial data when component mounts
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        lrNo: initialData.lrNo || "",
+        date: initialData.date || "",
+        noOfParcels: initialData.noOfParcels || "",
+        itemName: initialData.itemName || "",
+        quantity: initialData.quantity || "",
+        itemPhoto: initialData.itemPhoto || null,
+        parcelPhoto: initialData.parcelPhoto || null,
+      });
+    }
+  }, [initialData]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'itemPhoto' | 'parcelPhoto') => {
     const file = e.target.files?.[0];
@@ -63,7 +78,7 @@ const ParcelForm = ({ initialData = null }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Get existing parcels from localStorage
@@ -77,7 +92,7 @@ const ParcelForm = ({ initialData = null }) => {
 
     if (initialData) {
       // Update existing parcel
-      const updatedParcels = existingParcels.map((parcel) =>
+      const updatedParcels = existingParcels.map((parcel: Parcel) =>
         parcel.id === initialData.id ? newParcel : parcel
       );
       localStorage.setItem('parcels', JSON.stringify(updatedParcels));
