@@ -39,9 +39,12 @@ const UserManagement = () => {
       // First, get all profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, email, status");
+        .select("*");
 
-      if (profilesError) throw profilesError;
+      if (profilesError) {
+        console.error("Error fetching profiles:", profilesError);
+        throw profilesError;
+      }
 
       // Then, for each profile, get their roles
       const profilesWithRoles = await Promise.all(
@@ -51,7 +54,10 @@ const UserManagement = () => {
             .select("role")
             .eq("user_id", profile.id);
 
-          if (rolesError) throw rolesError;
+          if (rolesError) {
+            console.error("Error fetching roles:", rolesError);
+            throw rolesError;
+          }
 
           return {
             ...profile,
@@ -67,12 +73,29 @@ const UserManagement = () => {
   const updateUserRole = async (userId: string, newRole: UserRole) => {
     setUpdating(true);
     try {
-      const { error } = await supabase
+      // First check if user already has a role
+      const { data: existingRole } = await supabase
         .from("user_roles")
-        .update({ role: newRole })
-        .eq("user_id", userId);
+        .select("*")
+        .eq("user_id", userId)
+        .single();
 
-      if (error) throw error;
+      if (existingRole) {
+        // Update existing role
+        const { error } = await supabase
+          .from("user_roles")
+          .update({ role: newRole })
+          .eq("user_id", userId);
+
+        if (error) throw error;
+      } else {
+        // Insert new role
+        const { error } = await supabase
+          .from("user_roles")
+          .insert({ user_id: userId, role: newRole });
+
+        if (error) throw error;
+      }
 
       toast({
         title: "Role updated successfully",
@@ -80,6 +103,7 @@ const UserManagement = () => {
       });
       refetch();
     } catch (error) {
+      console.error("Error updating role:", error);
       toast({
         title: "Error updating role",
         description: "There was an error updating the user's role.",
@@ -106,6 +130,7 @@ const UserManagement = () => {
       });
       refetch();
     } catch (error) {
+      console.error("Error updating status:", error);
       toast({
         title: "Error updating status",
         description: "There was an error updating the user's status.",
@@ -147,12 +172,12 @@ const UserManagement = () => {
               </TableCell>
               <TableCell>
                 <Select
-                  disabled={updating}
+                  disabled={updating || user.status !== "approved"}
                   value={user.user_roles?.[0]?.role}
                   onValueChange={(value: UserRole) => updateUserRole(user.id, value)}
                 >
                   <SelectTrigger className="w-32">
-                    <SelectValue />
+                    <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="admin">Admin</SelectItem>
