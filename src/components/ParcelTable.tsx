@@ -18,10 +18,18 @@ import {
 } from "@/components/ui/dialog";
 import type { Parcel } from "./ParcelForm";
 
-const ParcelTable = () => {
+interface ParcelTableProps {
+  userRole: string | null;
+}
+
+const ParcelTable = ({ userRole }: ParcelTableProps) => {
   const [parcels, setParcels] = useState<Parcel[]>([]);
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+
+  const isAdmin = userRole === "admin";
+  const isEditor = userRole === "editor";
+  const canEdit = isAdmin || isEditor;
 
   // Load parcels from localStorage when component mounts
   useState(() => {
@@ -58,11 +66,13 @@ const ParcelTable = () => {
                 <TableCell>{parcel.quantity}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Link to={`/edit-parcel/${parcel.id}`}>
-                      <Button variant="outline" size="icon">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </Link>
+                    {canEdit && (
+                      <Link to={`/edit-parcel/${parcel.id}`}>
+                        <Button variant="outline" size="icon">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    )}
                     <Button 
                       variant="outline" 
                       size="icon"

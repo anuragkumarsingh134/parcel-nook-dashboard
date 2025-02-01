@@ -17,6 +17,8 @@ const Dashboard = () => {
   const { userRole, signOut } = useAuth();
   const { toast } = useToast();
   const isAdmin = userRole === "admin";
+  const isEditor = userRole === "editor";
+  const canManageParcels = isAdmin || isEditor;
 
   const handleSignOut = async () => {
     try {
@@ -39,12 +41,14 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Parcel Management</h1>
         <div className="flex gap-4">
-          <Link to="/add-parcel">
-            <Button className="bg-primary hover:bg-primary/90">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add New Parcel
-            </Button>
-          </Link>
+          {canManageParcels && (
+            <Link to="/add-parcel">
+              <Button className="bg-primary hover:bg-primary/90">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add New Parcel
+              </Button>
+            </Link>
+          )}
           {isAdmin && (
             <Sheet>
               <SheetTrigger asChild>
@@ -73,7 +77,7 @@ const Dashboard = () => {
           </Button>
         </div>
       </div>
-      <ParcelTable />
+      <ParcelTable userRole={userRole} />
     </div>
   );
 };
