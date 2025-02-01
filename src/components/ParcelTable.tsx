@@ -49,22 +49,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
         throw error;
       }
 
-      // Transform the data to match our frontend Parcel type
-      const transformedData: Parcel[] = data.map(parcel => ({
-        id: parcel.id,
-        lr_no: parcel.lr_no,
-        date: parcel.date,
-        no_of_parcels: parcel.no_of_parcels,
-        item_name: parcel.item_name,
-        quantity: parcel.quantity,
-        item_photo: parcel.item_photo,
-        parcel_photo: parcel.parcel_photo,
-        user_id: parcel.user_id,
-        created_at: parcel.created_at,
-        updated_at: parcel.updated_at
-      }));
-
-      setParcels(transformedData);
+      setParcels(data as Parcel[]);
     } catch (error) {
       console.error('Error fetching parcels:', error);
       toast({

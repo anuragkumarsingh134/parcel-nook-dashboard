@@ -98,9 +98,13 @@ const ParcelForm = ({ initialData = null }) => {
 
     try {
       const parcelData = {
-        ...formData,
+        lr_no: formData.lr_no,
+        date: formData.date,
         no_of_parcels: parseInt(formData.no_of_parcels as string),
+        item_name: formData.item_name,
         quantity: parseInt(formData.quantity as string),
+        item_photo: formData.item_photo,
+        parcel_photo: formData.parcel_photo,
         user_id: user.id,
       };
 
