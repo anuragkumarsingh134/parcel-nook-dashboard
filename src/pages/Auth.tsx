@@ -23,14 +23,15 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({
+        // First attempt to sign in
+        const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
-        
+
         if (signInError) {
+          // If email not confirmed error, check if user is approved
           if (signInError.message.includes("Email not confirmed")) {
-            // Check if user is approved in profiles
             const { data: profileData, error: profileError } = await supabase
               .from('profiles')
               .select('status')
@@ -39,8 +40,8 @@ const Auth = () => {
 
             if (profileError) throw profileError;
 
+            // If user is approved, bypass email verification
             if (profileData?.status === 'approved') {
-              // If approved, try signing in again (this time it should work)
               const { error: retryError } = await supabase.auth.signInWithPassword({
                 email,
                 password,
@@ -49,6 +50,7 @@ const Auth = () => {
               if (retryError) throw retryError;
               navigate("/dashboard");
             } else {
+              // If not approved, show email confirmation message
               setShowEmailConfirmation(true);
             }
           } else {
@@ -58,6 +60,7 @@ const Auth = () => {
         }
         navigate("/dashboard");
       } else {
+        // Handle signup
         const { error } = await supabase.auth.signUp({
           email,
           password,
