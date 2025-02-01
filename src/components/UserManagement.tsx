@@ -17,14 +17,13 @@ const UserManagement = () => {
     queryKey: ["users"],
     queryFn: async () => {
       try {
-        // Fetch all profiles and join with user_roles using the user ID
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
           .select(`
             id,
             email,
             status,
-            user_roles!user_roles_user_id_fkey (
+            user_roles (
               role
             )
           `);
@@ -39,8 +38,14 @@ const UserManagement = () => {
           throw profilesError;
         }
 
-        console.log("Fetched users:", profiles); // Debug log
-        return (profiles || []) as UserProfile[];
+        // Transform the data to match our UserProfile interface
+        const transformedProfiles = (profiles || []).map((profile: any) => ({
+          ...profile,
+          user_roles: profile.user_roles || [] // Ensure we always have an array, even if empty
+        }));
+
+        console.log("Fetched users:", transformedProfiles); // Debug log
+        return transformedProfiles as UserProfile[];
       } catch (error) {
         console.error("Error in user management query:", error);
         toast({
