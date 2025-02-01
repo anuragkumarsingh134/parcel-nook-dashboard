@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -13,10 +14,12 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setShowEmailConfirmation(false);
 
     try {
       if (isLogin) {
@@ -24,7 +27,19 @@ const Auth = () => {
           email,
           password,
         });
-        if (error) throw error;
+        
+        if (error) {
+          if (error.message.includes("Email not confirmed")) {
+            setShowEmailConfirmation(true);
+          } else {
+            toast({
+              title: "Error",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
+          return;
+        }
         navigate("/dashboard");
       } else {
         const { error } = await supabase.auth.signUp({
@@ -32,10 +47,7 @@ const Auth = () => {
           password,
         });
         if (error) throw error;
-        toast({
-          title: "Success",
-          description: "Please check your email to verify your account.",
-        });
+        setShowEmailConfirmation(true);
       }
     } catch (error: any) {
       toast({
@@ -45,6 +57,26 @@ const Auth = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+      });
+      if (error) throw error;
+      toast({
+        title: "Success",
+        description: "Confirmation email has been resent. Please check your inbox.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -61,6 +93,21 @@ const Auth = () => {
               : "Fill in your details to create an account"}
           </p>
         </div>
+
+        {showEmailConfirmation && (
+          <Alert>
+            <AlertDescription className="space-y-4">
+              <p>Please check your email to confirm your account before signing in.</p>
+              <Button
+                variant="outline"
+                onClick={handleResendConfirmation}
+                className="w-full"
+              >
+                Resend confirmation email
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <form onSubmit={handleAuth} className="mt-8 space-y-6">
           <div className="space-y-4">
