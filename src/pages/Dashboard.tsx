@@ -1,10 +1,14 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import ParcelTable from "@/components/ParcelTable";
+import UserManagement from "@/components/UserManagement";
+import { useAuth } from "@/providers/AuthProvider";
 
 const Dashboard = () => {
+  const { userRole } = useAuth();
+  const isAdmin = userRole === "admin";
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -17,6 +21,12 @@ const Dashboard = () => {
         </Link>
       </div>
       <ParcelTable />
+      
+      {isAdmin && (
+        <div className="mt-12">
+          <UserManagement />
+        </div>
+      )}
     </div>
   );
 };
