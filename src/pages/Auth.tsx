@@ -36,7 +36,7 @@ const Auth = () => {
               .from('profiles')
               .select('status')
               .eq('email', email)
-              .single();
+              .maybeSingle();
 
             if (profileError) throw profileError;
 
@@ -50,8 +50,13 @@ const Auth = () => {
               if (retryError) throw retryError;
               navigate("/dashboard");
             } else {
-              // If not approved, show email confirmation message
+              // If not approved or profile not found, show email confirmation message
               setShowEmailConfirmation(true);
+              toast({
+                title: "Account Not Approved",
+                description: "Please check your email to confirm your account or contact an administrator.",
+                variant: "destructive",
+              });
             }
           } else {
             throw signInError;
@@ -67,6 +72,10 @@ const Auth = () => {
         });
         if (error) throw error;
         setShowEmailConfirmation(true);
+        toast({
+          title: "Success",
+          description: "Please check your email to confirm your account.",
+        });
       }
     } catch (error: any) {
       toast({
