@@ -14,67 +14,59 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const [showApprovalPending, setShowApprovalPending] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setShowEmailConfirmation(false);
+    setShowApprovalPending(false);
 
     try {
       if (isLogin) {
-        // First attempt to sign in
+        // Check user status before attempting to sign in
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('status')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (profileError) throw profileError;
+
+        if (!profileData || profileData.status !== 'approved') {
+          setShowApprovalPending(true);
+          toast({
+            title: "Account Not Approved",
+            description: "Your account is pending approval. Please contact an administrator.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        // If approved, attempt to sign in
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
-        if (signInError) {
-          // If email not confirmed error, check if user is approved
-          if (signInError.message.includes("Email not confirmed")) {
-            const { data: profileData, error: profileError } = await supabase
-              .from('profiles')
-              .select('status')
-              .eq('email', email)
-              .maybeSingle();
-
-            if (profileError) throw profileError;
-
-            // If user is approved, bypass email verification
-            if (profileData?.status === 'approved') {
-              const { error: retryError } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-              });
-              
-              if (retryError) throw retryError;
-              navigate("/dashboard");
-            } else {
-              // If not approved or profile not found, show email confirmation message
-              setShowEmailConfirmation(true);
-              toast({
-                title: "Account Not Approved",
-                description: "Please check your email to confirm your account or contact an administrator.",
-                variant: "destructive",
-              });
-            }
-          } else {
-            throw signInError;
-          }
-          return;
-        }
+        if (signInError) throw signInError;
         navigate("/dashboard");
       } else {
-        // Handle signup
-        const { error } = await supabase.auth.signUp({
+        // Handle signup - no email verification
+        const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            emailRedirectTo: undefined, // Disable email verification
+          }
         });
-        if (error) throw error;
-        setShowEmailConfirmation(true);
+
+        if (signUpError) throw signUpError;
+        
+        setShowApprovalPending(true);
         toast({
-          title: "Success",
-          description: "Please check your email to confirm your account.",
+          title: "Sign Up Successful",
+          description: "Your account is pending approval. An administrator will review your request.",
         });
       }
     } catch (error: any) {
@@ -85,26 +77,6 @@ const Auth = () => {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleResendConfirmation = async () => {
-    try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email,
-      });
-      if (error) throw error;
-      toast({
-        title: "Success",
-        description: "Confirmation email has been resent. Please check your inbox.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
     }
   };
 
@@ -122,17 +94,10 @@ const Auth = () => {
           </p>
         </div>
 
-        {showEmailConfirmation && (
+        {showApprovalPending && (
           <Alert>
-            <AlertDescription className="space-y-4">
-              <p>Please check your email to confirm your account before signing in.</p>
-              <Button
-                variant="outline"
-                onClick={handleResendConfirmation}
-                className="w-full"
-              >
-                Resend confirmation email
-              </Button>
+            <AlertDescription>
+              Your account is pending approval. Please wait for an administrator to approve your account.
             </AlertDescription>
           </Alert>
         )}
