@@ -23,20 +23,36 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         
-        if (error) {
-          if (error.message.includes("Email not confirmed")) {
-            setShowEmailConfirmation(true);
+        if (signInError) {
+          if (signInError.message.includes("Email not confirmed")) {
+            // Check if user is approved in profiles
+            const { data: profileData, error: profileError } = await supabase
+              .from('profiles')
+              .select('status')
+              .eq('email', email)
+              .single();
+
+            if (profileError) throw profileError;
+
+            if (profileData?.status === 'approved') {
+              // If approved, try signing in again (this time it should work)
+              const { error: retryError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+              });
+              
+              if (retryError) throw retryError;
+              navigate("/dashboard");
+            } else {
+              setShowEmailConfirmation(true);
+            }
           } else {
-            toast({
-              title: "Error",
-              description: error.message,
-              variant: "destructive",
-            });
+            throw signInError;
           }
           return;
         }
