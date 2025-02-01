@@ -17,10 +17,17 @@ const UserManagement = () => {
     queryKey: ["users"],
     queryFn: async () => {
       try {
-        // First fetch all profiles
+        // Fetch all profiles with a left join to user_roles
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("*");
+          .select(`
+            id,
+            email,
+            status,
+            user_roles (
+              role
+            )
+          `);
 
         if (profilesError) {
           console.error("Error fetching profiles:", profilesError);
@@ -32,36 +39,8 @@ const UserManagement = () => {
           throw profilesError;
         }
 
-        // Then fetch roles for each profile
-        const profilesWithRoles = await Promise.all(
-          profiles.map(async (profile) => {
-            try {
-              const { data: roles, error: rolesError } = await supabase
-                .from("user_roles")
-                .select("role")
-                .eq("user_id", profile.id);
-
-              if (rolesError) {
-                console.error("Error fetching roles for user:", profile.id, rolesError);
-                throw rolesError;
-              }
-
-              return {
-                ...profile,
-                user_roles: roles || [],
-              };
-            } catch (error) {
-              console.error("Error processing user roles:", error);
-              return {
-                ...profile,
-                user_roles: [],
-              };
-            }
-          })
-        );
-
-        console.log("Fetched users:", profilesWithRoles); // Debug log
-        return profilesWithRoles as UserProfile[];
+        console.log("Fetched users:", profiles); // Debug log
+        return profiles as UserProfile[];
       } catch (error) {
         console.error("Error in user management query:", error);
         toast({
