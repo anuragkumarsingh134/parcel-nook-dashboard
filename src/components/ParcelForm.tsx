@@ -5,22 +5,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/providers/AuthProvider";
 
 // Define the Parcel type
 export type Parcel = {
-  id: number;
+  id: string;
   lrNo: string;
   date: string;
-  noOfParcels: string;
+  noOfParcels: number;
   itemName: string;
-  quantity: string;
+  quantity: number;
   itemPhoto: string | null;
   parcelPhoto: string | null;
+  user_id: string;
 };
 
 const ParcelForm = ({ initialData = null }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     lrNo: "",
     date: "",
@@ -78,39 +82,57 @@ const ParcelForm = ({ initialData = null }) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Get existing parcels from localStorage
-    const existingParcels = JSON.parse(localStorage.getItem('parcels') || '[]');
-    
-    // Create new parcel object
-    const newParcel = {
-      id: initialData?.id || Date.now(), // Use existing ID or create new one
-      ...formData
-    };
-
-    if (initialData) {
-      // Update existing parcel
-      const updatedParcels = existingParcels.map((parcel: Parcel) =>
-        parcel.id === initialData.id ? newParcel : parcel
-      );
-      localStorage.setItem('parcels', JSON.stringify(updatedParcels));
+    if (!user) {
       toast({
-        title: "Success",
-        description: "Parcel updated successfully",
+        title: "Error",
+        description: "You must be logged in to perform this action",
+        variant: "destructive",
       });
-    } else {
-      // Add new parcel
-      const updatedParcels = [...existingParcels, newParcel];
-      localStorage.setItem('parcels', JSON.stringify(updatedParcels));
-      toast({
-        title: "Success",
-        description: "Parcel added successfully",
-      });
+      return;
     }
 
-    navigate("/dashboard");
+    try {
+      const parcelData = {
+        ...formData,
+        noOfParcels: parseInt(formData.noOfParcels as string),
+        quantity: parseInt(formData.quantity as string),
+        user_id: user.id,
+      };
+
+      let response;
+      
+      if (initialData) {
+        response = await supabase
+          .from('parcels')
+          .update(parcelData)
+          .eq('id', initialData.id);
+      } else {
+        response = await supabase
+          .from('parcels')
+          .insert([parcelData]);
+      }
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      toast({
+        title: "Success",
+        description: initialData ? "Parcel updated successfully" : "Parcel added successfully",
+      });
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error('Error saving parcel:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save parcel",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
