@@ -8,17 +8,19 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/providers/AuthProvider";
 
-// Define the Parcel type
+// Define the Parcel type to match database schema
 export type Parcel = {
   id: string;
-  lrNo: string;
+  lr_no: string;
   date: string;
-  noOfParcels: number;
-  itemName: string;
+  no_of_parcels: number;
+  item_name: string;
   quantity: number;
-  itemPhoto: string | null;
-  parcelPhoto: string | null;
+  item_photo: string | null;
+  parcel_photo: string | null;
   user_id: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 const ParcelForm = ({ initialData = null }) => {
@@ -26,31 +28,31 @@ const ParcelForm = ({ initialData = null }) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
-    lrNo: "",
+    lr_no: "",
     date: "",
-    noOfParcels: "",
-    itemName: "",
+    no_of_parcels: "",
+    item_name: "",
     quantity: "",
-    itemPhoto: null,
-    parcelPhoto: null,
+    item_photo: null,
+    parcel_photo: null,
   });
 
   // Load initial data when component mounts
   useEffect(() => {
     if (initialData) {
       setFormData({
-        lrNo: initialData.lrNo || "",
+        lr_no: initialData.lr_no || "",
         date: initialData.date || "",
-        noOfParcels: initialData.noOfParcels || "",
-        itemName: initialData.itemName || "",
+        no_of_parcels: initialData.no_of_parcels || "",
+        item_name: initialData.item_name || "",
         quantity: initialData.quantity || "",
-        itemPhoto: initialData.itemPhoto || null,
-        parcelPhoto: initialData.parcelPhoto || null,
+        item_photo: initialData.item_photo || null,
+        parcel_photo: initialData.parcel_photo || null,
       });
     }
   }, [initialData]);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'itemPhoto' | 'parcelPhoto') => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'item_photo' | 'parcel_photo') => {
     const file = e.target.files?.[0];
     if (file) {
       try {
@@ -61,7 +63,7 @@ const ParcelForm = ({ initialData = null }) => {
         }));
         toast({
           title: "Success",
-          description: `${type === 'itemPhoto' ? 'Item' : 'Parcel'} photo uploaded successfully`,
+          description: `${type === 'item_photo' ? 'Item' : 'Parcel'} photo uploaded successfully`,
         });
       } catch (error) {
         toast({
@@ -97,7 +99,7 @@ const ParcelForm = ({ initialData = null }) => {
     try {
       const parcelData = {
         ...formData,
-        noOfParcels: parseInt(formData.noOfParcels as string),
+        no_of_parcels: parseInt(formData.no_of_parcels as string),
         quantity: parseInt(formData.quantity as string),
         user_id: user.id,
       };
@@ -112,7 +114,7 @@ const ParcelForm = ({ initialData = null }) => {
       } else {
         response = await supabase
           .from('parcels')
-          .insert([parcelData]);
+          .insert(parcelData);
       }
 
       if (response.error) {
@@ -149,12 +151,12 @@ const ParcelForm = ({ initialData = null }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="lrNo">LR Number</Label>
+          <Label htmlFor="lr_no">LR Number</Label>
           <Input
-            id="lrNo"
-            value={formData.lrNo}
+            id="lr_no"
+            value={formData.lr_no}
             onChange={(e) =>
-              setFormData({ ...formData, lrNo: e.target.value })
+              setFormData({ ...formData, lr_no: e.target.value })
             }
             required
           />
@@ -174,25 +176,25 @@ const ParcelForm = ({ initialData = null }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="noOfParcels">Number of Parcels</Label>
+          <Label htmlFor="no_of_parcels">Number of Parcels</Label>
           <Input
-            id="noOfParcels"
+            id="no_of_parcels"
             type="number"
-            value={formData.noOfParcels}
+            value={formData.no_of_parcels}
             onChange={(e) =>
-              setFormData({ ...formData, noOfParcels: e.target.value })
+              setFormData({ ...formData, no_of_parcels: e.target.value })
             }
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="itemName">Item Name</Label>
+          <Label htmlFor="item_name">Item Name</Label>
           <Input
-            id="itemName"
-            value={formData.itemName}
+            id="item_name"
+            value={formData.item_name}
             onChange={(e) =>
-              setFormData({ ...formData, itemName: e.target.value })
+              setFormData({ ...formData, item_name: e.target.value })
             }
             required
           />
@@ -214,12 +216,12 @@ const ParcelForm = ({ initialData = null }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="space-y-2">
-          <Label htmlFor="itemPhoto">Item Photo</Label>
+          <Label htmlFor="item_photo">Item Photo</Label>
           <div className="flex items-center justify-center w-full">
             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                {formData.itemPhoto ? (
-                  <img src={formData.itemPhoto} alt="Item" className="h-20 w-20 object-cover" />
+                {formData.item_photo ? (
+                  <img src={formData.item_photo} alt="Item" className="h-20 w-20 object-cover" />
                 ) : (
                   <>
                     <Upload className="w-8 h-8 mb-2 text-gray-500" />
@@ -228,23 +230,23 @@ const ParcelForm = ({ initialData = null }) => {
                 )}
               </div>
               <input 
-                id="itemPhoto" 
+                id="item_photo" 
                 type="file" 
                 className="hidden" 
                 accept="image/*"
-                onChange={(e) => handleFileChange(e, 'itemPhoto')}
+                onChange={(e) => handleFileChange(e, 'item_photo')}
               />
             </label>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="parcelPhoto">Parcel Photo</Label>
+          <Label htmlFor="parcel_photo">Parcel Photo</Label>
           <div className="flex items-center justify-center w-full">
             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                {formData.parcelPhoto ? (
-                  <img src={formData.parcelPhoto} alt="Parcel" className="h-20 w-20 object-cover" />
+                {formData.parcel_photo ? (
+                  <img src={formData.parcel_photo} alt="Parcel" className="h-20 w-20 object-cover" />
                 ) : (
                   <>
                     <Upload className="w-8 h-8 mb-2 text-gray-500" />
@@ -253,11 +255,11 @@ const ParcelForm = ({ initialData = null }) => {
                 )}
               </div>
               <input 
-                id="parcelPhoto" 
+                id="parcel_photo" 
                 type="file" 
                 className="hidden" 
                 accept="image/*"
-                onChange={(e) => handleFileChange(e, 'parcelPhoto')}
+                onChange={(e) => handleFileChange(e, 'parcel_photo')}
               />
             </label>
           </div>

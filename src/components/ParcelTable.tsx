@@ -49,7 +49,22 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
         throw error;
       }
 
-      setParcels(data || []);
+      // Transform the data to match our frontend Parcel type
+      const transformedData: Parcel[] = data.map(parcel => ({
+        id: parcel.id,
+        lr_no: parcel.lr_no,
+        date: parcel.date,
+        no_of_parcels: parcel.no_of_parcels,
+        item_name: parcel.item_name,
+        quantity: parcel.quantity,
+        item_photo: parcel.item_photo,
+        parcel_photo: parcel.parcel_photo,
+        user_id: parcel.user_id,
+        created_at: parcel.created_at,
+        updated_at: parcel.updated_at
+      }));
+
+      setParcels(transformedData);
     } catch (error) {
       console.error('Error fetching parcels:', error);
       toast({
@@ -82,10 +97,10 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
           <TableBody>
             {parcels.map((parcel) => (
               <TableRow key={parcel.id}>
-                <TableCell>{parcel.lrNo}</TableCell>
+                <TableCell>{parcel.lr_no}</TableCell>
                 <TableCell>{parcel.date}</TableCell>
-                <TableCell>{parcel.noOfParcels}</TableCell>
-                <TableCell>{parcel.itemName}</TableCell>
+                <TableCell>{parcel.no_of_parcels}</TableCell>
+                <TableCell>{parcel.item_name}</TableCell>
                 <TableCell>{parcel.quantity}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
@@ -121,31 +136,31 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
               <div>
                 <h3 className="font-semibold mb-2">Basic Information</h3>
                 <div className="space-y-2">
-                  <p><span className="font-medium">LR No:</span> {selectedParcel.lrNo}</p>
+                  <p><span className="font-medium">LR No:</span> {selectedParcel.lr_no}</p>
                   <p><span className="font-medium">Date:</span> {selectedParcel.date}</p>
-                  <p><span className="font-medium">No of Parcels:</span> {selectedParcel.noOfParcels}</p>
-                  <p><span className="font-medium">Item Name:</span> {selectedParcel.itemName}</p>
+                  <p><span className="font-medium">No of Parcels:</span> {selectedParcel.no_of_parcels}</p>
+                  <p><span className="font-medium">Item Name:</span> {selectedParcel.item_name}</p>
                   <p><span className="font-medium">Quantity:</span> {selectedParcel.quantity}</p>
                 </div>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Photos</h3>
                 <div className="space-y-4">
-                  {selectedParcel.itemPhoto && (
+                  {selectedParcel.item_photo && (
                     <div>
                       <p className="font-medium mb-1">Item Photo:</p>
                       <img 
-                        src={selectedParcel.itemPhoto} 
+                        src={selectedParcel.item_photo} 
                         alt="Item" 
                         className="w-full max-w-[200px] h-auto rounded-lg"
                       />
                     </div>
                   )}
-                  {selectedParcel.parcelPhoto && (
+                  {selectedParcel.parcel_photo && (
                     <div>
                       <p className="font-medium mb-1">Parcel Photo:</p>
                       <img 
-                        src={selectedParcel.parcelPhoto} 
+                        src={selectedParcel.parcel_photo} 
                         alt="Parcel" 
                         className="w-full max-w-[200px] h-auto rounded-lg"
                       />
