@@ -20,28 +20,42 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
     setIsLoading(true);
 
     try {
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("status")
-        .eq("email", email)
-        .maybeSingle();
-
-      if (!profileData || profileData.status !== "approved") {
-        toast({
-          title: "Account Not Approved",
-          description: "Your account is pending approval. Please contact an administrator.",
-          variant: "destructive",
-        });
-        return;
-      }
-
+      // First, attempt to sign in
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (signInError) throw signInError;
-      navigate("/dashboard");
+
+      // After successful sign in, get the user's role and profile status
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("No user data found");
+
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userData.user.id)
+        .single();
+
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("status")
+        .eq("id", userData.user.id)
+        .single();
+
+      // Allow access if user is admin or if their account is approved
+      if (roleData?.role === "admin" || profileData?.status === "approved") {
+        navigate("/dashboard");
+      } else {
+        // Sign out if not approved and not admin
+        await supabase.auth.signOut();
+        toast({
+          title: "Account Not Approved",
+          description: "Your account is pending approval. Please contact an administrator.",
+          variant: "destructive",
+        });
+      }
     } catch (error: any) {
       toast({
         title: "Error",
