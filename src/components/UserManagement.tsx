@@ -20,6 +20,15 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { UserCheck, UserX } from "lucide-react";
 
+type UserRole = "admin" | "editor" | "viewer";
+
+interface UserProfile {
+  id: string;
+  email: string;
+  status: string;
+  user_roles: { role: UserRole }[];
+}
+
 const UserManagement = () => {
   const { toast } = useToast();
   const [updating, setUpdating] = useState(false);
@@ -39,11 +48,11 @@ const UserManagement = () => {
         `);
 
       if (error) throw error;
-      return profiles;
+      return profiles as UserProfile[];
     },
   });
 
-  const updateUserRole = async (userId: string, newRole: string) => {
+  const updateUserRole = async (userId: string, newRole: UserRole) => {
     setUpdating(true);
     try {
       const { error } = await supabase
@@ -128,7 +137,7 @@ const UserManagement = () => {
                 <Select
                   disabled={updating}
                   value={user.user_roles?.[0]?.role}
-                  onValueChange={(value) => updateUserRole(user.id, value)}
+                  onValueChange={(value: UserRole) => updateUserRole(user.id, value)}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
