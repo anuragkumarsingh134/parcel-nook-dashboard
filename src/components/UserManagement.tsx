@@ -17,16 +17,10 @@ const UserManagement = () => {
     queryKey: ["users"],
     queryFn: async () => {
       try {
+        // First, fetch all profiles
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select(`
-            id,
-            email,
-            status,
-            user_roles (
-              role
-            )
-          `);
+          .select("id, email, status");
 
         if (profilesError) {
           console.error("Error fetching profiles:", profilesError);
@@ -38,11 +32,32 @@ const UserManagement = () => {
           throw profilesError;
         }
 
-        // Transform the data to match our UserProfile interface
-        const transformedProfiles = (profiles || []).map((profile: any) => ({
-          ...profile,
-          user_roles: profile.user_roles || [] // Ensure we always have an array, even if empty
-        }));
+        // Then, fetch all user roles
+        const { data: userRoles, error: rolesError } = await supabase
+          .from("user_roles")
+          .select("user_id, role");
+
+        if (rolesError) {
+          console.error("Error fetching user roles:", rolesError);
+          toast({
+            title: "Error fetching user roles",
+            description: "There was a problem loading user roles.",
+            variant: "destructive",
+          });
+          throw rolesError;
+        }
+
+        // Combine the data
+        const transformedProfiles = (profiles || []).map((profile: any) => {
+          const userRolesForProfile = userRoles?.filter(
+            (role) => role.user_id === profile.id
+          ) || [];
+          
+          return {
+            ...profile,
+            user_roles: userRolesForProfile.map(role => ({ role: role.role }))
+          };
+        });
 
         console.log("Fetched users:", transformedProfiles); // Debug log
         return transformedProfiles as UserProfile[];
