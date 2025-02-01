@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, LogOut } from "lucide-react";
+import { PlusCircle, LogOut, Users } from "lucide-react";
 import ParcelTable from "@/components/ParcelTable";
 import UserManagement from "@/components/UserManagement";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Dashboard = () => {
   const { userRole, signOut } = useAuth();
@@ -38,6 +45,24 @@ const Dashboard = () => {
               Add New Parcel
             </Button>
           </Link>
+          {isAdmin && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <Users className="h-4 w-4" />
+                  Manage Users
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>User Management</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  <UserManagement />
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
           <Button 
             variant="outline" 
             onClick={handleSignOut}
@@ -49,12 +74,6 @@ const Dashboard = () => {
         </div>
       </div>
       <ParcelTable />
-      
-      {isAdmin && (
-        <div className="mt-12">
-          <UserManagement />
-        </div>
-      )}
     </div>
   );
 };
