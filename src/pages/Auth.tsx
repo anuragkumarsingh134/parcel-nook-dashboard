@@ -81,8 +81,10 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <DarkModeToggle />
+    <div className="min-h-screen flex items-center justify-center bg-background relative">
+      <div className="absolute top-4 right-4">
+        <DarkModeToggle />
+      </div>
       <div className="max-w-md w-full space-y-8 p-8 bg-card rounded-lg shadow">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-foreground">Welcome</h2>
