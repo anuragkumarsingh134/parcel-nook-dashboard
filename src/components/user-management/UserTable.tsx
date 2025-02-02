@@ -66,92 +66,91 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
   };
 
   return (
-    <div className="w-full">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[200px] min-w-[120px]">Email</TableHead>
-            <TableHead className="w-[100px]">Status</TableHead>
-            <TableHead className="w-[120px]">Role</TableHead>
-            <TableHead className="w-[180px]">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users?.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell className="truncate max-w-[200px]">
-                <span className="block truncate" title={user.email}>
-                  {user.email}
-                </span>
-              </TableCell>
-              <TableCell>
-                <span
-                  className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    user.status
-                  )}`}
-                >
-                  {user.status}
-                </span>
-              </TableCell>
-              <TableCell>
-                <UserRoleSelect
-                  userId={user.id}
-                  currentRole={user.user_roles?.[0]?.role}
-                  isDisabled={user.status !== "approved"}
-                  onRoleUpdate={onUpdate}
-                />
-              </TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-2">
-                  {user.status === "pending" && (
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const userActions = document.getElementById(`user-actions-${user.id}`);
-                          if (userActions) {
-                            userActions.click();
-                          }
-                        }}
-                        className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
-                      >
-                        <UserCheck className="w-4 h-4" />
-                        {!isMobile && "Approve"}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const userActions = document.getElementById(`user-actions-${user.id}`);
-                          if (userActions) {
-                            userActions.click();
-                          }
-                        }}
-                        className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                      >
-                        <UserX className="w-4 h-4" />
-                        {!isMobile && "Reject"}
-                      </Button>
-                    </div>
-                  )}
-                  {user.user_roles?.[0]?.role !== "admin" && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      {!isMobile && "Delete"}
-                    </Button>
-                  )}
-                </div>
-              </TableCell>
+    <div className="w-full max-w-full overflow-hidden">
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[120px] min-w-[120px]">Email</TableHead>
+              <TableHead className="w-[90px]">Status</TableHead>
+              <TableHead className="w-[100px]">Role</TableHead>
+              <TableHead className="w-[120px]">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {users?.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell className="max-w-[120px]">
+                  <span className="block truncate" title={user.email}>
+                    {user.email}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                      user.status
+                    )}`}
+                  >
+                    {user.status}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <UserRoleSelect
+                    userId={user.id}
+                    currentRole={user.user_roles?.[0]?.role}
+                    isDisabled={user.status !== "approved"}
+                    onRoleUpdate={onUpdate}
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-wrap gap-1">
+                    {user.status === "pending" && (
+                      <div className="flex flex-wrap gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const userActions = document.getElementById(`user-actions-${user.id}`);
+                            if (userActions) {
+                              userActions.click();
+                            }
+                          }}
+                          className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 p-1.5"
+                        >
+                          <UserCheck className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const userActions = document.getElementById(`user-actions-${user.id}`);
+                            if (userActions) {
+                              userActions.click();
+                            }
+                          }}
+                          className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1.5"
+                        >
+                          <UserX className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
+                    {user.user_roles?.[0]?.role !== "admin" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1.5"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

@@ -14,12 +14,14 @@ interface ParcelTableRowProps {
 const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile }: ParcelTableRowProps) => {
   return (
     <TableRow className="hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors">
-      <TableCell className="font-medium">{parcel.lr_no}</TableCell>
+      <TableCell className="font-medium max-w-[100px] truncate" title={parcel.lr_no}>
+        {parcel.lr_no}
+      </TableCell>
       {!isMobile && <TableCell>{parcel.date}</TableCell>}
       <TableCell>{parcel.no_of_parcels}</TableCell>
-      {!isMobile && <TableCell>{parcel.item_name}</TableCell>}
+      {!isMobile && <TableCell className="max-w-[120px] truncate" title={parcel.item_name}>{parcel.item_name}</TableCell>}
       <TableCell>{parcel.quantity}</TableCell>
-      <TableCell className="text-right">
+      <TableCell>
         <ParcelActions
           parcel={parcel}
           isAdmin={isAdmin}
