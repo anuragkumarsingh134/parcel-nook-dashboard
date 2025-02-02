@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Trash2, UserCheck, UserX } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import UserRoleSelect from "./UserRoleSelect";
 import UserActions from "./UserActions";
 import { supabase } from "@/integrations/supabase/client";
@@ -105,34 +105,7 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {user.status === "pending" && (
-                      <div className="flex flex-wrap gap-1">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            const userActions = document.getElementById(`user-actions-${user.id}`);
-                            if (userActions) {
-                              userActions.click();
-                            }
-                          }}
-                          className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 p-1.5"
-                        >
-                          <UserCheck className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            const userActions = document.getElementById(`user-actions-${user.id}`);
-                            if (userActions) {
-                              userActions.click();
-                            }
-                          }}
-                          className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1.5"
-                        >
-                          <UserX className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <UserActions userId={user.id} onStatusUpdate={onUpdate} />
                     )}
                     {user.user_roles?.[0]?.role !== "admin" && (
                       <Button
