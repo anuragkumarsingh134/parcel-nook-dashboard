@@ -7,8 +7,8 @@ import { ArrowLeft, Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/providers/AuthProvider";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-// Define the Parcel type to match database schema
 export type Parcel = {
   id: string;
   lr_no: string;
@@ -221,51 +221,55 @@ const ParcelForm = ({ initialData = null }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="space-y-2">
           <Label htmlFor="item_photo">Item Photo</Label>
-          <div className="flex items-center justify-center w-full">
-            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                {formData.item_photo ? (
-                  <img src={formData.item_photo} alt="Item" className="h-20 w-20 object-cover" />
-                ) : (
-                  <>
-                    <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                    <p className="text-sm text-gray-500">Click to upload item photo</p>
-                  </>
-                )}
-              </div>
-              <input 
-                id="item_photo" 
-                type="file" 
-                className="hidden" 
-                accept="image/*"
-                onChange={(e) => handleFileChange(e, 'item_photo')}
-              />
-            </label>
+          <div className="overflow-hidden rounded-lg border bg-muted">
+            <AspectRatio ratio={4/3} className="bg-muted">
+              <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer bg-gray-50 hover:bg-gray-100">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  {formData.item_photo ? (
+                    <img src={formData.item_photo} alt="Item" className="object-contain w-full h-full" />
+                  ) : (
+                    <>
+                      <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                      <p className="text-sm text-gray-500">Click to upload item photo</p>
+                    </>
+                  )}
+                </div>
+                <input 
+                  id="item_photo" 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'item_photo')}
+                />
+              </label>
+            </AspectRatio>
           </div>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="parcel_photo">Parcel Photo</Label>
-          <div className="flex items-center justify-center w-full">
-            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                {formData.parcel_photo ? (
-                  <img src={formData.parcel_photo} alt="Parcel" className="h-20 w-20 object-cover" />
-                ) : (
-                  <>
-                    <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                    <p className="text-sm text-gray-500">Click to upload parcel photo</p>
-                  </>
-                )}
-              </div>
-              <input 
-                id="parcel_photo" 
-                type="file" 
-                className="hidden" 
-                accept="image/*"
-                onChange={(e) => handleFileChange(e, 'parcel_photo')}
-              />
-            </label>
+          <div className="overflow-hidden rounded-lg border bg-muted">
+            <AspectRatio ratio={4/3} className="bg-muted">
+              <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer bg-gray-50 hover:bg-gray-100">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  {formData.parcel_photo ? (
+                    <img src={formData.parcel_photo} alt="Parcel" className="object-contain w-full h-full" />
+                  ) : (
+                    <>
+                      <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                      <p className="text-sm text-gray-500">Click to upload parcel photo</p>
+                    </>
+                  )}
+                </div>
+                <input 
+                  id="parcel_photo" 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'parcel_photo')}
+                />
+              </label>
+            </AspectRatio>
           </div>
         </div>
       </div>
