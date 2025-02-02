@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import type { Parcel } from "../ParcelForm";
 
 interface ParcelViewDialogProps {
@@ -63,24 +64,28 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
               {parcel.item_photo && (
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-muted-foreground">Item Photo:</p>
-                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-                    <img 
-                      src={parcel.item_photo} 
-                      alt="Item" 
-                      className="object-contain w-full h-full"
-                    />
+                  <div className="overflow-hidden rounded-lg border bg-muted">
+                    <AspectRatio ratio={4/3} className="bg-muted">
+                      <img 
+                        src={parcel.item_photo} 
+                        alt="Item" 
+                        className="object-contain w-full h-full"
+                      />
+                    </AspectRatio>
                   </div>
                 </div>
               )}
               {parcel.parcel_photo && (
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-muted-foreground">Parcel Photo:</p>
-                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-                    <img 
-                      src={parcel.parcel_photo} 
-                      alt="Parcel" 
-                      className="object-contain w-full h-full"
-                    />
+                  <div className="overflow-hidden rounded-lg border bg-muted">
+                    <AspectRatio ratio={4/3} className="bg-muted">
+                      <img 
+                        src={parcel.parcel_photo} 
+                        alt="Parcel" 
+                        className="object-contain w-full h-full"
+                      />
+                    </AspectRatio>
                   </div>
                 </div>
               )}
