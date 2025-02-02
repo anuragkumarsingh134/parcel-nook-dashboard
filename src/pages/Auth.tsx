@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -80,11 +81,12 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <DarkModeToggle />
+      <div className="max-w-md w-full space-y-8 p-8 bg-card rounded-lg shadow">
         <div className="text-center">
-          <h2 className="text-3xl font-bold">Welcome</h2>
-          <p className="mt-2 text-gray-600">
+          <h2 className="text-3xl font-bold text-foreground">Welcome</h2>
+          <p className="mt-2 text-muted-foreground">
             Sign in to your account or create a new one
           </p>
         </div>
@@ -107,6 +109,7 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-background"
               />
             </div>
             <div>
@@ -117,6 +120,7 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-background"
               />
             </div>
           </div>
