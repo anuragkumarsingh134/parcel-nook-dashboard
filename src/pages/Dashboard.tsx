@@ -5,6 +5,7 @@ import ParcelTable from "@/components/ParcelTable";
 import UserManagement from "@/components/UserManagement";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 import {
   Sheet,
   SheetContent,
@@ -40,6 +41,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <DarkModeToggle />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div className="space-y-1">
