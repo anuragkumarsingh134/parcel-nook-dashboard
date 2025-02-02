@@ -27,7 +27,8 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
         options: {
           data: {
             email: email,
-          }
+          },
+          emailRedirectTo: undefined // Disable email confirmation
         },
       });
 
