@@ -15,28 +15,20 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const [showApprovalPending, setShowApprovalPending] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setShowEmailConfirmation(false);
+    setShowApprovalPending(false);
 
     try {
-      // First, attempt to sign in
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (signInError) {
-        // Check if the error is about email confirmation
-        if (signInError.message.includes("Email not confirmed")) {
-          setShowEmailConfirmation(true);
-          throw new Error("Please check your email and confirm your account before signing in.");
-        }
-        throw signInError;
-      }
+      if (signInError) throw signInError;
 
       // After successful sign in, get the user's role and profile status
       const { data: userData } = await supabase.auth.getUser();
@@ -60,11 +52,8 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
       } else {
         // Sign out if not approved and not admin
         await supabase.auth.signOut();
-        toast({
-          title: "Account Not Approved",
-          description: "Your account is pending approval. Please contact an administrator.",
-          variant: "destructive",
-        });
+        setShowApprovalPending(true);
+        throw new Error("Your account is pending approval. Please contact an administrator.");
       }
     } catch (error: any) {
       toast({
@@ -79,10 +68,10 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
 
   return (
     <>
-      {showEmailConfirmation && (
+      {showApprovalPending && (
         <Alert>
           <AlertDescription>
-            Please check your email and confirm your account before signing in. If you haven't received the confirmation email, you can request a new one.
+            Your account is pending approval. Please contact an administrator to get your account approved.
           </AlertDescription>
         </Alert>
       )}

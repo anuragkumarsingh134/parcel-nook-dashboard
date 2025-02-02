@@ -21,16 +21,10 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
     setShowApprovalPending(false);
 
     try {
-      // Get the current URL origin, fallback to a default if not available
-      const redirectTo = typeof window !== 'undefined' 
-        ? `${window.location.origin}/auth/callback`
-        : 'http://localhost:5173/auth/callback';
-
-      const { error: signUpError, data } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectTo,
           data: {
             email: email,
           }
@@ -42,7 +36,7 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
       setShowApprovalPending(true);
       toast({
         title: "Sign Up Successful",
-        description: "Please check your email to confirm your account. After confirmation, an administrator will need to approve your account.",
+        description: "Your account has been created. An administrator will need to approve your account before you can sign in.",
       });
     } catch (error: any) {
       toast({
@@ -60,7 +54,7 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
       {showApprovalPending && (
         <Alert>
           <AlertDescription>
-            Please check your email to confirm your account. After confirmation, an administrator will need to approve your account before you can sign in.
+            Your account is pending approval. An administrator will need to approve your account before you can sign in.
           </AlertDescription>
         </Alert>
       )}
