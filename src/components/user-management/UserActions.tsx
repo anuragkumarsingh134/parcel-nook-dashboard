@@ -41,7 +41,7 @@ const UserActions = ({ userId, onStatusUpdate }: UserActionsProps) => {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1 flex-wrap">
       <Button
         variant="outline"
         size="sm"

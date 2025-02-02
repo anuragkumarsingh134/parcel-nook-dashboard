@@ -66,64 +66,62 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
   };
 
   return (
-    <div className="w-full">
-      <div className="min-w-full">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[30%]">Email</TableHead>
-              <TableHead className="w-[20%]">Status</TableHead>
-              <TableHead className="w-[25%]">Role</TableHead>
-              <TableHead className="w-[25%]">Actions</TableHead>
+    <div className="w-full overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[35%]">Email</TableHead>
+            <TableHead className="w-[15%]">Status</TableHead>
+            <TableHead className="w-[20%]">Role</TableHead>
+            <TableHead className="w-[30%]">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users?.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell className="break-all">
+                <span className="block" title={user.email}>
+                  {user.email}
+                </span>
+              </TableCell>
+              <TableCell>
+                <span
+                  className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                    user.status
+                  )}`}
+                >
+                  {user.status}
+                </span>
+              </TableCell>
+              <TableCell>
+                <UserRoleSelect
+                  userId={user.id}
+                  currentRole={user.user_roles?.[0]?.role}
+                  isDisabled={user.status !== "approved"}
+                  onRoleUpdate={onUpdate}
+                />
+              </TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-2">
+                  {user.status === "pending" && (
+                    <UserActions userId={user.id} onStatusUpdate={onUpdate} />
+                  )}
+                  {user.user_roles?.[0]?.role !== "admin" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteUser(user.id)}
+                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users?.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell className="break-all">
-                  <span className="block" title={user.email}>
-                    {user.email}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      user.status
-                    )}`}
-                  >
-                    {user.status}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <UserRoleSelect
-                    userId={user.id}
-                    currentRole={user.user_roles?.[0]?.role}
-                    isDisabled={user.status !== "approved"}
-                    onRoleUpdate={onUpdate}
-                  />
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {user.status === "pending" && (
-                      <UserActions userId={user.id} onStatusUpdate={onUpdate} />
-                    )}
-                    {user.user_roles?.[0]?.role !== "admin" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteUser(user.id)}
-                        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1.5"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
