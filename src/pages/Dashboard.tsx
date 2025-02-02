@@ -48,9 +48,6 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
               LR DATA
             </h1>
-            <p className="text-gray-600 dark:text-gray-300">
-              Manage your parcels and shipments efficiently
-            </p>
           </div>
           <div className="flex flex-wrap gap-3">
             {canManageParcels && (
