@@ -2,23 +2,15 @@ import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Edit, Eye, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import type { Parcel } from "./ParcelForm";
 import { useToast } from "@/hooks/use-toast";
+import ParcelTableRow from "./parcel/ParcelTableRow";
+import ParcelViewDialog from "./parcel/ParcelViewDialog";
 
 interface ParcelTableProps {
   userRole: string | null;
@@ -74,7 +66,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
         description: "Parcel deleted successfully",
       });
       
-      fetchParcels(); // Refresh the list
+      fetchParcels();
     } catch (error) {
       console.error('Error deleting parcel:', error);
       toast({
@@ -106,92 +98,24 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
           </TableHeader>
           <TableBody>
             {parcels.map((parcel) => (
-              <TableRow key={parcel.id}>
-                <TableCell>{parcel.lr_no}</TableCell>
-                <TableCell>{parcel.date}</TableCell>
-                <TableCell>{parcel.no_of_parcels}</TableCell>
-                <TableCell>{parcel.item_name}</TableCell>
-                <TableCell>{parcel.quantity}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    {canEdit && (
-                      <Link to={`/edit-parcel/${parcel.id}`}>
-                        <Button variant="outline" size="icon">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                    )}
-                    <Button 
-                      variant="outline" 
-                      size="icon"
-                      onClick={() => handleView(parcel)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    {isAdmin && (
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleDelete(parcel.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
+              <ParcelTableRow
+                key={parcel.id}
+                parcel={parcel}
+                isAdmin={isAdmin}
+                canEdit={canEdit}
+                onView={handleView}
+                onDelete={handleDelete}
+              />
             ))}
           </TableBody>
         </Table>
       </div>
 
-      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Parcel Details</DialogTitle>
-          </DialogHeader>
-          {selectedParcel && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold mb-2">Basic Information</h3>
-                <div className="space-y-2">
-                  <p><span className="font-medium">LR No:</span> {selectedParcel.lr_no}</p>
-                  <p><span className="font-medium">Date:</span> {selectedParcel.date}</p>
-                  <p><span className="font-medium">No of Parcels:</span> {selectedParcel.no_of_parcels}</p>
-                  <p><span className="font-medium">Item Name:</span> {selectedParcel.item_name}</p>
-                  <p><span className="font-medium">Quantity:</span> {selectedParcel.quantity}</p>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Photos</h3>
-                <div className="space-y-4">
-                  {selectedParcel.item_photo && (
-                    <div>
-                      <p className="font-medium mb-1">Item Photo:</p>
-                      <img 
-                        src={selectedParcel.item_photo} 
-                        alt="Item" 
-                        className="w-full max-w-[200px] h-auto rounded-lg"
-                      />
-                    </div>
-                  )}
-                  {selectedParcel.parcel_photo && (
-                    <div>
-                      <p className="font-medium mb-1">Parcel Photo:</p>
-                      <img 
-                        src={selectedParcel.parcel_photo} 
-                        alt="Parcel" 
-                        className="w-full max-w-[200px] h-auto rounded-lg"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ParcelViewDialog
+        parcel={selectedParcel}
+        isOpen={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+      />
     </>
   );
 };
