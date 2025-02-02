@@ -21,11 +21,11 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
     setShowApprovalPending(false);
 
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { error: signUpError, data } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: undefined,
+          emailRedirectTo: window.location.origin + '/auth',
         },
       });
 
@@ -34,7 +34,7 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
       setShowApprovalPending(true);
       toast({
         title: "Sign Up Successful",
-        description: "Your account is pending approval. An administrator will review your request.",
+        description: "Please check your email to confirm your account. After confirmation, an administrator will need to approve your account.",
       });
     } catch (error: any) {
       toast({
@@ -52,7 +52,7 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
       {showApprovalPending && (
         <Alert>
           <AlertDescription>
-            Your account is pending approval. Please wait for an administrator to approve your account.
+            Please check your email to confirm your account. After confirmation, an administrator will need to approve your account before you can sign in.
           </AlertDescription>
         </Alert>
       )}

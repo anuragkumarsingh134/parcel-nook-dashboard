@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import AuthForm from "./AuthForm";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface LoginFormProps {
   onToggle: () => void;
@@ -14,10 +15,12 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setShowEmailConfirmation(false);
 
     try {
       // First, attempt to sign in
@@ -26,7 +29,14 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
         password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        // Check if the error is about email confirmation
+        if (signInError.message.includes("Email not confirmed")) {
+          setShowEmailConfirmation(true);
+          throw new Error("Please check your email and confirm your account before signing in.");
+        }
+        throw signInError;
+      }
 
       // After successful sign in, get the user's role and profile status
       const { data: userData } = await supabase.auth.getUser();
@@ -68,17 +78,26 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
   };
 
   return (
-    <AuthForm
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
-      isLoading={isLoading}
-      onSubmit={handleLogin}
-      submitText="Sign in"
-      toggleText="Don't have an account? Sign up"
-      onToggle={onToggle}
-    />
+    <>
+      {showEmailConfirmation && (
+        <Alert>
+          <AlertDescription>
+            Please check your email and confirm your account before signing in. If you haven't received the confirmation email, you can request a new one.
+          </AlertDescription>
+        </Alert>
+      )}
+      <AuthForm
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        isLoading={isLoading}
+        onSubmit={handleLogin}
+        submitText="Sign in"
+        toggleText="Don't have an account? Sign up"
+        onToggle={onToggle}
+      />
+    </>
   );
 };
 
