@@ -66,22 +66,22 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="w-full">
+      <div className="min-w-full">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[120px] min-w-[120px]">Email</TableHead>
-              <TableHead className="w-[90px]">Status</TableHead>
-              <TableHead className="w-[100px]">Role</TableHead>
-              <TableHead className="w-[120px]">Actions</TableHead>
+              <TableHead className="w-[30%]">Email</TableHead>
+              <TableHead className="w-[20%]">Status</TableHead>
+              <TableHead className="w-[25%]">Role</TableHead>
+              <TableHead className="w-[25%]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users?.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="max-w-[120px]">
-                  <span className="block truncate" title={user.email}>
+                <TableCell className="break-all">
+                  <span className="block" title={user.email}>
                     {user.email}
                   </span>
                 </TableCell>
