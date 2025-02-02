@@ -159,7 +159,7 @@ const ParcelForm = ({ initialData = null }) => {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">Add New Parcel</h1>
+          <h1 className="text-2xl font-bold text-primary">Add New Parcel</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
