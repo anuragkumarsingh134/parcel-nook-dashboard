@@ -147,44 +147,51 @@ const ParcelForm = ({ initialData = null }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      <Button
-        type="button"
-        variant="ghost"
-        onClick={() => navigate("/dashboard")}
-        className="mb-4"
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Dashboard
-      </Button>
+    <div className="min-h-screen bg-background text-foreground p-6">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center justify-between mb-8">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => navigate("/dashboard")}
+            className="text-foreground hover:text-foreground/80"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+          <h1 className="text-2xl font-bold text-foreground">Add New Parcel</h1>
+        </div>
 
-      <ParcelFormFields 
-        formData={formData}
-        onChange={handleFieldChange}
-      />
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <ParcelFormFields 
+            formData={formData}
+            onChange={handleFieldChange}
+          />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <ParcelPhotoUpload
-          id="parcel_photo"
-          label="Parcel Photo"
-          photo={formData.parcel_photo}
-          onPhotoChange={(e) => handleFileChange(e, 'parcel_photo')}
-        />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ParcelPhotoUpload
+              id="parcel_photo"
+              label="Parcel Photo"
+              photo={formData.parcel_photo}
+              onPhotoChange={(e) => handleFileChange(e, 'parcel_photo')}
+            />
 
-        <ParcelPhotoUpload
-          id="item_photo"
-          label="Item Photo"
-          photo={formData.item_photo}
-          onPhotoChange={(e) => handleFileChange(e, 'item_photo')}
-        />
+            <ParcelPhotoUpload
+              id="item_photo"
+              label="Item Photo"
+              photo={formData.item_photo}
+              onPhotoChange={(e) => handleFileChange(e, 'item_photo')}
+            />
+          </div>
+
+          <div className="flex justify-end mt-8">
+            <Button type="submit" className="w-full md:w-auto">
+              {initialData ? "Update Parcel" : "Add Parcel"}
+            </Button>
+          </div>
+        </form>
       </div>
-
-      <div className="flex justify-end mt-6">
-        <Button type="submit" className="w-full md:w-auto">
-          {initialData ? "Update Parcel" : "Add Parcel"}
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 

@@ -12,17 +12,17 @@ interface ParcelPhotoUploadProps {
 const ParcelPhotoUpload = ({ id, label, photo, onPhotoChange }: ParcelPhotoUploadProps) => {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
-      <div className="overflow-hidden rounded-lg border bg-muted">
-        <AspectRatio ratio={4/3} className="bg-muted">
-          <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer bg-gray-50 hover:bg-gray-100">
+      <Label htmlFor={id} className="text-foreground">{label}</Label>
+      <div className="overflow-hidden rounded-lg border border-input">
+        <AspectRatio ratio={4/3}>
+          <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer bg-background hover:bg-muted/50 transition-colors">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               {photo ? (
                 <img src={photo} alt={label} className="object-contain w-full h-full" />
               ) : (
                 <>
-                  <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                  <p className="text-sm text-gray-500">Click to upload {label.toLowerCase()}</p>
+                  <Upload className="w-8 h-8 mb-2 text-foreground/60" />
+                  <p className="text-sm text-foreground/60">Click to upload {label.toLowerCase()}</p>
                 </>
               )}
             </div>

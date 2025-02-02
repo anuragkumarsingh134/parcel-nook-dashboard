@@ -16,55 +16,60 @@ const ParcelFormFields = ({ formData, onChange }: ParcelFormFieldsProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="space-y-2">
-        <Label htmlFor="lr_no">LR Number</Label>
+        <Label htmlFor="lr_no" className="text-foreground">LR Number</Label>
         <Input
           id="lr_no"
           value={formData.lr_no}
           onChange={(e) => onChange("lr_no", e.target.value)}
           required
+          className="bg-background border-input text-foreground"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="no_of_parcels">Number of Parcels</Label>
+        <Label htmlFor="no_of_parcels" className="text-foreground">Number of Parcels</Label>
         <Input
           id="no_of_parcels"
           type="number"
           value={formData.no_of_parcels}
           onChange={(e) => onChange("no_of_parcels", e.target.value)}
           required
+          className="bg-background border-input text-foreground"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="date">Opening Date</Label>
+        <Label htmlFor="date" className="text-foreground">Opening Date</Label>
         <Input
           id="date"
           type="date"
           value={formData.date}
           onChange={(e) => onChange("date", e.target.value)}
           required
+          className="bg-background border-input text-foreground"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="item_name">Item Name</Label>
+        <Label htmlFor="item_name" className="text-foreground">Item Name</Label>
         <Input
           id="item_name"
           value={formData.item_name}
           onChange={(e) => onChange("item_name", e.target.value)}
           required
+          className="bg-background border-input text-foreground"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="quantity">Item Quantity</Label>
+        <Label htmlFor="quantity" className="text-foreground">Item Quantity</Label>
         <Input
           id="quantity"
           type="number"
           value={formData.quantity}
           onChange={(e) => onChange("quantity", e.target.value)}
           required
+          className="bg-background border-input text-foreground"
         />
       </div>
     </div>
