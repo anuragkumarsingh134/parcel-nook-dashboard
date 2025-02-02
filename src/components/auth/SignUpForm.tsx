@@ -21,11 +21,19 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
     setShowApprovalPending(false);
 
     try {
+      // Get the current URL origin, fallback to a default if not available
+      const redirectTo = typeof window !== 'undefined' 
+        ? `${window.location.origin}/auth/callback`
+        : 'http://localhost:5173/auth/callback';
+
       const { error: signUpError, data } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin + '/auth',
+          emailRedirectTo: redirectTo,
+          data: {
+            email: email,
+          }
         },
       });
 
