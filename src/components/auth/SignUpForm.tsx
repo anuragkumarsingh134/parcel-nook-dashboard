@@ -24,12 +24,6 @@ const SignUpForm = ({ onToggle }: SignUpFormProps) => {
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            email: email,
-          },
-          emailRedirectTo: undefined // Disable email confirmation
-        },
       });
 
       if (signUpError) throw signUpError;

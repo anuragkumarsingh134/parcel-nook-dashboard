@@ -34,16 +34,16 @@ const LoginForm = ({ onToggle }: LoginFormProps) => {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) throw new Error("No user data found");
 
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userData.user.id)
-        .single();
-
       const { data: profileData } = await supabase
         .from("profiles")
         .select("status")
         .eq("id", userData.user.id)
+        .single();
+
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userData.user.id)
         .single();
 
       // Allow access if user is admin or if their account is approved
