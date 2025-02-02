@@ -11,6 +11,7 @@ import type { Parcel } from "./ParcelForm";
 import { useToast } from "@/hooks/use-toast";
 import ParcelTableRow from "./parcel/ParcelTableRow";
 import ParcelViewDialog from "./parcel/ParcelViewDialog";
+import ParcelSearch from "./parcel/ParcelSearch";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ParcelTableProps {
@@ -86,6 +87,9 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
 
   return (
     <>
+      <div className="mb-4">
+        <ParcelSearch parcels={parcels} onSelect={handleView} />
+      </div>
       <div className="w-full max-w-full overflow-hidden rounded-lg border border-purple-100 dark:border-purple-800 transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
         <div className="overflow-x-auto">
           <Table>
