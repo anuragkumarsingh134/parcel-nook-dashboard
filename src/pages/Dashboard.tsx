@@ -46,7 +46,7 @@ const Dashboard = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div className="space-y-1">
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
-              Parcel Management
+              LR DATA
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
               Manage your parcels and shipments efficiently
