@@ -96,10 +96,8 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
             <TableHeader>
               <TableRow className="bg-purple-50 dark:bg-purple-900/20">
                 <TableHead className="font-semibold w-[100px]">LR No</TableHead>
-                {!isMobile && <TableHead className="font-semibold w-[100px]">Date</TableHead>}
-                <TableHead className="font-semibold w-[80px]">Parcels</TableHead>
-                {!isMobile && <TableHead className="font-semibold w-[120px]">Item Name</TableHead>}
-                <TableHead className="font-semibold w-[80px]">Qty</TableHead>
+                <TableHead className="font-semibold w-[100px]">Date</TableHead>
+                <TableHead className="font-semibold w-[120px]">No of Parcels</TableHead>
                 <TableHead className="font-semibold text-right w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>

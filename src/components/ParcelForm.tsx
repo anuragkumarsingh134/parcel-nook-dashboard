@@ -29,25 +29,24 @@ const ParcelForm = ({ initialData = null }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     lr_no: "",
-    date: "",
     no_of_parcels: "",
+    date: "",
     item_name: "",
     quantity: "",
-    item_photo: null,
     parcel_photo: null,
+    item_photo: null,
   });
 
-  // Load initial data when component mounts
   useEffect(() => {
     if (initialData) {
       setFormData({
         lr_no: initialData.lr_no || "",
-        date: initialData.date || "",
         no_of_parcels: initialData.no_of_parcels || "",
+        date: initialData.date || "",
         item_name: initialData.item_name || "",
         quantity: initialData.quantity || "",
-        item_photo: initialData.item_photo || null,
         parcel_photo: initialData.parcel_photo || null,
+        item_photo: initialData.item_photo || null,
       });
     }
   }, [initialData]);
@@ -99,12 +98,12 @@ const ParcelForm = ({ initialData = null }) => {
     try {
       const parcelData = {
         lr_no: formData.lr_no,
-        date: formData.date,
         no_of_parcels: parseInt(formData.no_of_parcels as string),
+        date: formData.date,
         item_name: formData.item_name,
         quantity: parseInt(formData.quantity as string),
-        item_photo: formData.item_photo,
         parcel_photo: formData.parcel_photo,
+        item_photo: formData.item_photo,
         user_id: user.id,
       };
 
@@ -167,19 +166,6 @@ const ParcelForm = ({ initialData = null }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="date">Date</Label>
-          <Input
-            id="date"
-            type="date"
-            value={formData.date}
-            onChange={(e) =>
-              setFormData({ ...formData, date: e.target.value })
-            }
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
           <Label htmlFor="no_of_parcels">Number of Parcels</Label>
           <Input
             id="no_of_parcels"
@@ -187,6 +173,19 @@ const ParcelForm = ({ initialData = null }) => {
             value={formData.no_of_parcels}
             onChange={(e) =>
               setFormData({ ...formData, no_of_parcels: e.target.value })
+            }
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="date">Opening Date</Label>
+          <Input
+            id="date"
+            type="date"
+            value={formData.date}
+            onChange={(e) =>
+              setFormData({ ...formData, date: e.target.value })
             }
             required
           />
@@ -205,7 +204,7 @@ const ParcelForm = ({ initialData = null }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="quantity">Quantity</Label>
+          <Label htmlFor="quantity">Item Quantity</Label>
           <Input
             id="quantity"
             type="number"
@@ -219,33 +218,6 @@ const ParcelForm = ({ initialData = null }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <div className="space-y-2">
-          <Label htmlFor="item_photo">Item Photo</Label>
-          <div className="overflow-hidden rounded-lg border bg-muted">
-            <AspectRatio ratio={4/3} className="bg-muted">
-              <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer bg-gray-50 hover:bg-gray-100">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  {formData.item_photo ? (
-                    <img src={formData.item_photo} alt="Item" className="object-contain w-full h-full" />
-                  ) : (
-                    <>
-                      <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                      <p className="text-sm text-gray-500">Click to upload item photo</p>
-                    </>
-                  )}
-                </div>
-                <input 
-                  id="item_photo" 
-                  type="file" 
-                  className="hidden" 
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, 'item_photo')}
-                />
-              </label>
-            </AspectRatio>
-          </div>
-        </div>
-
         <div className="space-y-2">
           <Label htmlFor="parcel_photo">Parcel Photo</Label>
           <div className="overflow-hidden rounded-lg border bg-muted">
@@ -267,6 +239,33 @@ const ParcelForm = ({ initialData = null }) => {
                   className="hidden" 
                   accept="image/*"
                   onChange={(e) => handleFileChange(e, 'parcel_photo')}
+                />
+              </label>
+            </AspectRatio>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="item_photo">Item Photo</Label>
+          <div className="overflow-hidden rounded-lg border bg-muted">
+            <AspectRatio ratio={4/3} className="bg-muted">
+              <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer bg-gray-50 hover:bg-gray-100">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  {formData.item_photo ? (
+                    <img src={formData.item_photo} alt="Item" className="object-contain w-full h-full" />
+                  ) : (
+                    <>
+                      <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                      <p className="text-sm text-gray-500">Click to upload item photo</p>
+                    </>
+                  )}
+                </div>
+                <input 
+                  id="item_photo" 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'item_photo')}
                 />
               </label>
             </AspectRatio>

@@ -17,10 +17,8 @@ const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile }
       <TableCell className="font-medium max-w-[100px] truncate" title={parcel.lr_no}>
         {parcel.lr_no}
       </TableCell>
-      {!isMobile && <TableCell>{parcel.date}</TableCell>}
+      <TableCell>{parcel.date}</TableCell>
       <TableCell>{parcel.no_of_parcels}</TableCell>
-      {!isMobile && <TableCell className="max-w-[120px] truncate" title={parcel.item_name}>{parcel.item_name}</TableCell>}
-      <TableCell>{parcel.quantity}</TableCell>
       <TableCell>
         <ParcelActions
           parcel={parcel}
