@@ -22,6 +22,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
   const [parcels, setParcels] = useState<Parcel[]>([]);
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -35,34 +36,46 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
 
   const fetchParcels = async () => {
     try {
+      setIsLoading(true);
+      console.log("Fetching parcels...");
+      
       const { data, error } = await supabase
         .from('parcels')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Database error:', error);
         throw error;
       }
 
+      console.log("Fetched parcels:", data);
       setParcels(data as Parcel[]);
     } catch (error) {
       console.error('Error fetching parcels:', error);
       toast({
         title: "Error",
-        description: "Failed to load parcels",
+        description: "Failed to load parcels. Please check your database connection.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDelete = async (parcelId: string) => {
     try {
+      console.log("Deleting parcel:", parcelId);
+      
       const { error } = await supabase
         .from('parcels')
         .delete()
         .eq('id', parcelId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Delete error:', error);
+        throw error;
+      }
 
       toast({
         title: "Success",
@@ -74,7 +87,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
       console.error('Error deleting parcel:', error);
       toast({
         title: "Error",
-        description: "Failed to delete parcel",
+        description: "Failed to delete parcel. Please check your database connection.",
         variant: "destructive",
       });
     }
@@ -84,6 +97,14 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
     setSelectedParcel(parcel);
     setIsViewDialogOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full text-center py-8">
+        <p className="text-muted-foreground">Loading parcels...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -102,17 +123,25 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {parcels.map((parcel) => (
-                <ParcelTableRow
-                  key={parcel.id}
-                  parcel={parcel}
-                  isAdmin={isAdmin}
-                  canEdit={canEdit}
-                  onView={handleView}
-                  onDelete={handleDelete}
-                  isMobile={isMobile}
-                />
-              ))}
+              {parcels.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-8">
+                    <p className="text-muted-foreground">No parcels found</p>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                parcels.map((parcel) => (
+                  <ParcelTableRow
+                    key={parcel.id}
+                    parcel={parcel}
+                    isAdmin={isAdmin}
+                    canEdit={canEdit}
+                    onView={handleView}
+                    onDelete={handleDelete}
+                    isMobile={isMobile}
+                  />
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
