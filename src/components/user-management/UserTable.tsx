@@ -6,8 +6,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import UserRoleSelect from "./UserRoleSelect";
 import UserActions from "./UserActions";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserProfile {
   id: string;
@@ -22,6 +26,34 @@ interface UserTableProps {
 }
 
 const UserTable = ({ users, onUpdate }: UserTableProps) => {
+  const { toast } = useToast();
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      // Delete from profiles table (this will cascade to user_roles due to FK)
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "User deleted successfully",
+      });
+      
+      onUpdate(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete user",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -58,9 +90,23 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
               />
             </TableCell>
             <TableCell>
-              {user.status === "pending" && (
-                <UserActions userId={user.id} onStatusUpdate={onUpdate} />
-              )}
+              <div className="flex gap-2">
+                {user.status === "pending" && (
+                  <UserActions userId={user.id} onStatusUpdate={onUpdate} />
+                )}
+                {/* Don't allow deleting yourself */}
+                {user.user_roles?.[0]?.role !== "admin" && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteUser(user.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
+                )}
+              </div>
             </TableCell>
           </TableRow>
         ))}

@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye } from "lucide-react";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Dialog,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import type { Parcel } from "./ParcelForm";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ParcelTableProps {
   userRole: string | null;
@@ -55,6 +55,31 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
       toast({
         title: "Error",
         description: "Failed to load parcels",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async (parcelId: string) => {
+    try {
+      const { error } = await supabase
+        .from('parcels')
+        .delete()
+        .eq('id', parcelId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Parcel deleted successfully",
+      });
+      
+      fetchParcels(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting parcel:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete parcel",
         variant: "destructive",
       });
     }
@@ -103,6 +128,16 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
+                    {isAdmin && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDelete(parcel.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
