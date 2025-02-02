@@ -38,10 +38,27 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
 
       if (profileError) throw profileError;
 
-      // Then delete from auth.users table
-      const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+      // Get the current session for the auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No active session');
 
-      if (authError) throw authError;
+      // Call the Edge Function to delete the user
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete user');
+      }
 
       toast({
         title: "Success",
@@ -53,7 +70,7 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
       console.error('Error deleting user:', error);
       toast({
         title: "Error",
-        description: "Failed to delete user. Make sure you have the required permissions.",
+        description: error.message || "Failed to delete user",
         variant: "destructive",
       });
     }
