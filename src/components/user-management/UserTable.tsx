@@ -30,13 +30,18 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
 
   const handleDeleteUser = async (userId: string) => {
     try {
-      // Delete from profiles table (this will cascade to user_roles due to FK)
-      const { error } = await supabase
+      // First delete from profiles table (this will cascade to user_roles due to FK)
+      const { error: profileError } = await supabase
         .from('profiles')
         .delete()
         .eq('id', userId);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      // Then delete from auth.users table
+      const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+
+      if (authError) throw authError;
 
       toast({
         title: "Success",
@@ -48,7 +53,7 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
       console.error('Error deleting user:', error);
       toast({
         title: "Error",
-        description: "Failed to delete user",
+        description: "Failed to delete user. Make sure you have the required permissions.",
         variant: "destructive",
       });
     }
@@ -94,7 +99,7 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
                 {user.status === "pending" && (
                   <UserActions userId={user.id} onStatusUpdate={onUpdate} />
                 )}
-                {/* Don't allow deleting yourself */}
+                {/* Don't allow deleting admin users */}
                 {user.user_roles?.[0]?.role !== "admin" && (
                   <Button
                     variant="outline"
