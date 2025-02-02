@@ -69,7 +69,7 @@ const UserRoleSelect = ({ userId, currentRole, isDisabled, onRoleUpdate }: UserR
       value={currentRole}
       onValueChange={(value: UserRole) => updateUserRole(value)}
     >
-      <SelectTrigger className="w-32">
+      <SelectTrigger className="w-[110px] h-9">
         <SelectValue placeholder="Select role" />
       </SelectTrigger>
       <SelectContent>

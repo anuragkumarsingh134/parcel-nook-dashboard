@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, UserCheck, UserX } from "lucide-react";
 import UserRoleSelect from "./UserRoleSelect";
 import UserActions from "./UserActions";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,12 +54,23 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
     }
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "approved":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "rejected":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      default:
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+    }
+  };
+
   return (
     <div className="w-full">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[180px]">Email</TableHead>
+            <TableHead className="w-[200px] min-w-[120px]">Email</TableHead>
             <TableHead className="w-[100px]">Status</TableHead>
             <TableHead className="w-[120px]">Role</TableHead>
             <TableHead className="w-[180px]">Actions</TableHead>
@@ -68,18 +79,16 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
         <TableBody>
           {users?.map((user) => (
             <TableRow key={user.id}>
-              <TableCell className="truncate max-w-[180px]">
-                {user.email}
+              <TableCell className="truncate max-w-[200px]">
+                <span className="block truncate" title={user.email}>
+                  {user.email}
+                </span>
               </TableCell>
               <TableCell>
                 <span
-                  className={`inline-block px-2 py-1 rounded-full text-xs ${
-                    user.status === "approved"
-                      ? "bg-green-100 text-green-800"
-                      : user.status === "rejected"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
+                  className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                    user.status
+                  )}`}
                 >
                   {user.status}
                 </span>
@@ -95,16 +104,45 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
               <TableCell>
                 <div className="flex flex-wrap gap-2">
                   {user.status === "pending" && (
-                    <UserActions userId={user.id} onStatusUpdate={onUpdate} />
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const userActions = document.getElementById(`user-actions-${user.id}`);
+                          if (userActions) {
+                            userActions.click();
+                          }
+                        }}
+                        className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
+                      >
+                        <UserCheck className="w-4 h-4" />
+                        {!isMobile && "Approve"}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const userActions = document.getElementById(`user-actions-${user.id}`);
+                          if (userActions) {
+                            userActions.click();
+                          }
+                        }}
+                        className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                      >
+                        <UserX className="w-4 h-4" />
+                        {!isMobile && "Reject"}
+                      </Button>
+                    </div>
                   )}
                   {user.user_roles?.[0]?.role !== "admin" && (
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleDeleteUser(user.id)}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                     >
-                      <Trash2 className="w-4 h-4 mr-1" />
+                      <Trash2 className="w-4 h-4" />
                       {!isMobile && "Delete"}
                     </Button>
                   )}
