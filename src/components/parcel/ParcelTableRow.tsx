@@ -8,23 +8,25 @@ interface ParcelTableRowProps {
   canEdit: boolean;
   onView: (parcel: Parcel) => void;
   onDelete: (parcelId: string) => void;
+  isMobile: boolean;
 }
 
-const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete }: ParcelTableRowProps) => {
+const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile }: ParcelTableRowProps) => {
   return (
-    <TableRow>
-      <TableCell>{parcel.lr_no}</TableCell>
-      <TableCell>{parcel.date}</TableCell>
+    <TableRow className="hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors">
+      <TableCell className="font-medium">{parcel.lr_no}</TableCell>
+      {!isMobile && <TableCell>{parcel.date}</TableCell>}
       <TableCell>{parcel.no_of_parcels}</TableCell>
-      <TableCell>{parcel.item_name}</TableCell>
+      {!isMobile && <TableCell>{parcel.item_name}</TableCell>}
       <TableCell>{parcel.quantity}</TableCell>
-      <TableCell>
+      <TableCell className="text-right">
         <ParcelActions
           parcel={parcel}
           isAdmin={isAdmin}
           canEdit={canEdit}
           onView={onView}
           onDelete={onDelete}
+          isMobile={isMobile}
         />
       </TableCell>
     </TableRow>

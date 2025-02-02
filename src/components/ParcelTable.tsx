@@ -11,6 +11,7 @@ import type { Parcel } from "./ParcelForm";
 import { useToast } from "@/hooks/use-toast";
 import ParcelTableRow from "./parcel/ParcelTableRow";
 import ParcelViewDialog from "./parcel/ParcelViewDialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ParcelTableProps {
   userRole: string | null;
@@ -21,6 +22,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const isAdmin = userRole === "admin";
   const isEditor = userRole === "editor";
@@ -84,31 +86,34 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
 
   return (
     <>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>LR No</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>No of Parcels</TableHead>
-              <TableHead>Item Name</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {parcels.map((parcel) => (
-              <ParcelTableRow
-                key={parcel.id}
-                parcel={parcel}
-                isAdmin={isAdmin}
-                canEdit={canEdit}
-                onView={handleView}
-                onDelete={handleDelete}
-              />
-            ))}
-          </TableBody>
-        </Table>
+      <div className="rounded-lg border border-purple-100 dark:border-purple-800 overflow-hidden transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-purple-50 dark:bg-purple-900/20">
+                <TableHead className="font-semibold">LR No</TableHead>
+                {!isMobile && <TableHead className="font-semibold">Date</TableHead>}
+                <TableHead className="font-semibold">Parcels</TableHead>
+                {!isMobile && <TableHead className="font-semibold">Item Name</TableHead>}
+                <TableHead className="font-semibold">Quantity</TableHead>
+                <TableHead className="font-semibold text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {parcels.map((parcel) => (
+                <ParcelTableRow
+                  key={parcel.id}
+                  parcel={parcel}
+                  isAdmin={isAdmin}
+                  canEdit={canEdit}
+                  onView={handleView}
+                  onDelete={handleDelete}
+                  isMobile={isMobile}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <ParcelViewDialog
