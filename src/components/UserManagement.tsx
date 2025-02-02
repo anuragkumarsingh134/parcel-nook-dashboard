@@ -17,7 +17,6 @@ const UserManagement = () => {
     queryKey: ["users"],
     queryFn: async () => {
       try {
-        // First, fetch all profiles
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
           .select("id, email, status");
@@ -32,7 +31,6 @@ const UserManagement = () => {
           throw profilesError;
         }
 
-        // Then, fetch all user roles
         const { data: userRoles, error: rolesError } = await supabase
           .from("user_roles")
           .select("user_id, role");
@@ -47,7 +45,6 @@ const UserManagement = () => {
           throw rolesError;
         }
 
-        // Combine the data
         const transformedProfiles = (profiles || []).map((profile: any) => {
           const userRolesForProfile = userRoles?.filter(
             (role) => role.user_id === profile.id
@@ -59,7 +56,7 @@ const UserManagement = () => {
           };
         });
 
-        console.log("Fetched users:", transformedProfiles); // Debug log
+        console.log("Fetched users:", transformedProfiles);
         return transformedProfiles as UserProfile[];
       } catch (error) {
         console.error("Error in user management query:", error);
@@ -74,9 +71,11 @@ const UserManagement = () => {
   });
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">User Management</h2>
-      <UserTable users={users || []} onUpdate={refetch} />
+    <div className="h-full flex flex-col min-h-0">
+      <h2 className="text-2xl font-bold mb-4">User Management</h2>
+      <div className="flex-1 overflow-auto min-h-0">
+        <UserTable users={users || []} onUpdate={refetch} />
+      </div>
     </div>
   );
 };

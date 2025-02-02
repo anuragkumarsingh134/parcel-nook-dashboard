@@ -72,11 +72,11 @@ const Dashboard = () => {
                     {isMobile && "Users"}
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="w-full sm:max-w-xl h-full flex flex-col">
-                  <SheetHeader>
+                <SheetContent className="w-full sm:max-w-xl flex flex-col h-[100dvh] p-0">
+                  <SheetHeader className="p-6 pb-2">
                     <SheetTitle>User Management</SheetTitle>
                   </SheetHeader>
-                  <div className="flex-1 overflow-auto mt-6">
+                  <div className="flex-1 overflow-hidden p-6 pt-2">
                     <UserManagement />
                   </div>
                 </SheetContent>
