@@ -67,7 +67,7 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
                     <img 
                       src={parcel.item_photo} 
                       alt="Item" 
-                      className="object-contain w-full h-full hover:scale-105 transition-transform duration-300"
+                      className="object-contain w-full h-full"
                     />
                   </div>
                 </div>
@@ -79,7 +79,7 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
                     <img 
                       src={parcel.parcel_photo} 
                       alt="Parcel" 
-                      className="object-contain w-full h-full hover:scale-105 transition-transform duration-300"
+                      className="object-contain w-full h-full"
                     />
                   </div>
                 </div>
