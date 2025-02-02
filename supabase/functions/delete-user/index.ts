@@ -61,10 +61,35 @@ serve(async (req) => {
     // Get the user ID to delete from the request body
     const { userId } = await req.json()
 
-    // Delete the user using the admin API
+    console.log('Attempting to delete user:', userId)
+
+    // First delete from user_roles table
+    const { error: userRolesError } = await supabaseClient
+      .from('user_roles')
+      .delete()
+      .eq('user_id', userId)
+
+    if (userRolesError) {
+      console.error('Error deleting user roles:', userRolesError)
+      throw userRolesError
+    }
+
+    // Then delete from profiles table
+    const { error: profileError } = await supabaseClient
+      .from('profiles')
+      .delete()
+      .eq('id', userId)
+
+    if (profileError) {
+      console.error('Error deleting profile:', profileError)
+      throw profileError
+    }
+
+    // Finally delete the user using the admin API
     const { error: deleteError } = await supabaseClient.auth.admin.deleteUser(userId)
 
     if (deleteError) {
+      console.error('Error deleting auth user:', deleteError)
       return new Response(
         JSON.stringify({ error: deleteError.message }),
         {
@@ -74,6 +99,7 @@ serve(async (req) => {
       )
     }
 
+    console.log('User deleted successfully:', userId)
     return new Response(
       JSON.stringify({ message: 'User deleted successfully' }),
       {
@@ -82,6 +108,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
+    console.error('Error in delete-user function:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       {
