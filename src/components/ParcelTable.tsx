@@ -86,17 +86,17 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
 
   return (
     <>
-      <div className="rounded-lg border border-purple-100 dark:border-purple-800 overflow-hidden transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
-        <div className="overflow-x-auto">
+      <div className="rounded-lg border border-purple-100 dark:border-purple-800 transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
+        <div className="w-full">
           <Table>
             <TableHeader>
               <TableRow className="bg-purple-50 dark:bg-purple-900/20">
-                <TableHead className="font-semibold">LR No</TableHead>
-                {!isMobile && <TableHead className="font-semibold">Date</TableHead>}
-                <TableHead className="font-semibold">Parcels</TableHead>
-                {!isMobile && <TableHead className="font-semibold">Item Name</TableHead>}
-                <TableHead className="font-semibold">Quantity</TableHead>
-                <TableHead className="font-semibold text-right">Actions</TableHead>
+                <TableHead className="font-semibold w-[120px]">LR No</TableHead>
+                {!isMobile && <TableHead className="font-semibold w-[120px]">Date</TableHead>}
+                <TableHead className="font-semibold w-[100px]">Parcels</TableHead>
+                {!isMobile && <TableHead className="font-semibold w-[150px]">Item Name</TableHead>}
+                <TableHead className="font-semibold w-[100px]">Quantity</TableHead>
+                <TableHead className="font-semibold text-right w-[140px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

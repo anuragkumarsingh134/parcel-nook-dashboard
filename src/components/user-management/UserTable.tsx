@@ -12,6 +12,7 @@ import UserRoleSelect from "./UserRoleSelect";
 import UserActions from "./UserActions";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface UserProfile {
   id: string;
@@ -27,22 +28,10 @@ interface UserTableProps {
 
 const UserTable = ({ users, onUpdate }: UserTableProps) => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleDeleteUser = async (userId: string) => {
     try {
-      // First delete from profiles table (this will cascade to user_roles due to FK)
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', userId);
-
-      if (profileError) throw profileError;
-
-      // Get the current session for the auth token
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No active session');
-
-      // Call the Edge Function using supabase.functions.invoke
       const { data, error } = await supabase.functions.invoke('delete-user', {
         body: { userId },
       });
@@ -54,7 +43,7 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
         description: "User deleted successfully",
       });
       
-      onUpdate(); // Refresh the list
+      onUpdate();
     } catch (error) {
       console.error('Error deleting user:', error);
       toast({
@@ -66,63 +55,66 @@ const UserTable = ({ users, onUpdate }: UserTableProps) => {
   };
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Email</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {users?.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>
-              <span
-                className={`px-2 py-1 rounded-full text-xs ${
-                  user.status === "approved"
-                    ? "bg-green-100 text-green-800"
-                    : user.status === "rejected"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
-              >
-                {user.status}
-              </span>
-            </TableCell>
-            <TableCell>
-              <UserRoleSelect
-                userId={user.id}
-                currentRole={user.user_roles?.[0]?.role}
-                isDisabled={user.status !== "approved"}
-                onRoleUpdate={onUpdate}
-              />
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                {user.status === "pending" && (
-                  <UserActions userId={user.id} onStatusUpdate={onUpdate} />
-                )}
-                {/* Don't allow deleting admin users */}
-                {user.user_roles?.[0]?.role !== "admin" && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDeleteUser(user.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
-                  </Button>
-                )}
-              </div>
-            </TableCell>
+    <div className="w-full">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[180px]">Email</TableHead>
+            <TableHead className="w-[100px]">Status</TableHead>
+            <TableHead className="w-[120px]">Role</TableHead>
+            <TableHead className="w-[180px]">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {users?.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell className="truncate max-w-[180px]">
+                {user.email}
+              </TableCell>
+              <TableCell>
+                <span
+                  className={`inline-block px-2 py-1 rounded-full text-xs ${
+                    user.status === "approved"
+                      ? "bg-green-100 text-green-800"
+                      : user.status === "rejected"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }`}
+                >
+                  {user.status}
+                </span>
+              </TableCell>
+              <TableCell>
+                <UserRoleSelect
+                  userId={user.id}
+                  currentRole={user.user_roles?.[0]?.role}
+                  isDisabled={user.status !== "approved"}
+                  onRoleUpdate={onUpdate}
+                />
+              </TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-2">
+                  {user.status === "pending" && (
+                    <UserActions userId={user.id} onStatusUpdate={onUpdate} />
+                  )}
+                  {user.user_roles?.[0]?.role !== "admin" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteUser(user.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      {!isMobile && "Delete"}
+                    </Button>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 

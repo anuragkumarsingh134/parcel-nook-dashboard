@@ -14,7 +14,7 @@ interface ParcelActionsProps {
 
 const ParcelActions = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile }: ParcelActionsProps) => {
   return (
-    <div className="flex gap-2 justify-end">
+    <div className="flex flex-wrap gap-2 justify-end">
       {canEdit && (
         <Link to={`/edit-parcel/${parcel.id}`}>
           <Button 
