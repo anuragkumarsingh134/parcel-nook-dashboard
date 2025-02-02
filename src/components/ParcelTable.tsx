@@ -90,15 +90,15 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
       <div className="mb-4">
         <ParcelSearch parcels={parcels} onSelect={handleView} />
       </div>
-      <div className="w-full max-w-full overflow-hidden rounded-lg border border-purple-100 dark:border-purple-800 transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
-        <div className="overflow-x-auto">
+      <div className="w-full rounded-lg border border-purple-100 dark:border-purple-800 transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
+        <div className="overflow-x-auto min-w-full">
           <Table>
             <TableHeader>
               <TableRow className="bg-purple-50 dark:bg-purple-900/20">
-                <TableHead className="font-semibold w-[100px]">LR No</TableHead>
-                <TableHead className="font-semibold w-[100px]">Date</TableHead>
-                <TableHead className="font-semibold w-[120px]">No of Parcels</TableHead>
-                <TableHead className="font-semibold text-right w-[100px]">Actions</TableHead>
+                <TableHead className="font-semibold min-w-[100px]">LR No</TableHead>
+                <TableHead className="font-semibold min-w-[100px]">Date</TableHead>
+                <TableHead className="font-semibold min-w-[120px]">No of Parcels</TableHead>
+                <TableHead className="font-semibold text-right min-w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
