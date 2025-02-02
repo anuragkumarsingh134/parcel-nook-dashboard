@@ -35,7 +35,7 @@ const ParcelSearch = ({ parcels, onSelect }: ParcelSearchProps) => {
     <div className="relative">
       <Button
         variant="outline"
-        className="relative h-9 w-full justify-start border-purple-200 bg-purple-50 text-sm text-muted-foreground hover:bg-purple-100 hover:border-purple-300 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/40 dark:hover:border-purple-700 sm:pr-12 md:w-40 lg:w-64"
+        className="relative h-9 w-full justify-start border-purple-200 bg-purple-50 text-sm text-purple-900 hover:bg-purple-100 hover:border-purple-300 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/40 dark:hover:border-purple-700 sm:pr-12 md:w-40 lg:w-64"
         onClick={() => setOpen(true)}
       >
         <Search className="mr-2 h-4 w-4" />
@@ -47,22 +47,30 @@ const ParcelSearch = ({ parcels, onSelect }: ParcelSearchProps) => {
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command className="rounded-lg border shadow-md">
-          <CommandInput placeholder="Search parcels..." />
+          <CommandInput 
+            placeholder="Search parcels..." 
+            className="text-base text-purple-900 dark:text-white placeholder:text-purple-500 dark:placeholder:text-purple-400"
+          />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Parcels">
+            <CommandEmpty className="py-6 text-sm text-purple-600 dark:text-purple-300">
+              No results found.
+            </CommandEmpty>
+            <CommandGroup heading="Parcels" className="text-sm font-medium text-purple-900 dark:text-white">
               {parcels.map((parcel) => (
                 <CommandItem
                   key={parcel.id}
                   value={`${parcel.lr_no} ${parcel.item_name} ${parcel.date}`}
+                  className="cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/40 rounded-md"
                   onSelect={() => {
                     onSelect(parcel);
                     setOpen(false);
                   }}
                 >
-                  <div className="flex flex-col">
-                    <span className="font-medium">{parcel.lr_no}</span>
-                    <span className="text-sm text-muted-foreground">
+                  <div className="flex flex-col py-1">
+                    <span className="font-medium text-purple-900 dark:text-white">
+                      {parcel.lr_no}
+                    </span>
+                    <span className="text-sm text-purple-600 dark:text-purple-300">
                       {parcel.item_name} - {parcel.date}
                     </span>
                   </div>
