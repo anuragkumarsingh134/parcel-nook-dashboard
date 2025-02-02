@@ -149,7 +149,7 @@ const ParcelForm = ({ initialData = null }) => {
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center mb-8">
           <Button
             type="button"
             variant="ghost"
@@ -159,7 +159,6 @@ const ParcelForm = ({ initialData = null }) => {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
-          <h1 className="text-2xl font-bold text-primary">Add New Parcel</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
