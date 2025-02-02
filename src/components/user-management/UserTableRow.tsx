@@ -23,11 +23,11 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
   return (
     <TableRow>
       <TableCell className="break-all md:w-[35%]">
-        <div className="flex flex-col space-y-4 md:space-y-0">
+        <div className="flex flex-col space-y-4">
           <span className="block font-medium" title={user.email}>
             {user.email}
           </span>
-          <div className="md:hidden flex flex-col space-y-4">
+          <div className="block md:hidden flex flex-col space-y-4">
             <div className="flex flex-col space-y-2">
               <span className="text-sm text-muted-foreground">Status</span>
               <StatusBadge status={user.status} />

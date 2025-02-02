@@ -6,7 +6,7 @@ import {
 
 const UserTableHeader = () => {
   return (
-    <TableHeader>
+    <TableHeader className="hidden md:table-header-group">
       <TableRow>
         <TableHead className="w-[35%]">Email</TableHead>
         <TableHead className="w-[15%]">Status</TableHead>
