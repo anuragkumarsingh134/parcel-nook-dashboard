@@ -1,159 +1,149 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-  TableCell,
 } from "@/components/ui/table";
+import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import type { Parcel } from "./ParcelForm";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/providers/AuthProvider";
 import ParcelTableRow from "./parcel/ParcelTableRow";
-import ParcelViewDialog from "./parcel/ParcelViewDialog";
 import ParcelSearch from "./parcel/ParcelSearch";
+import ParcelViewDialog from "./parcel/ParcelViewDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { Parcel } from "./ParcelForm";
+
+interface UserProfile {
+  id: string;
+  name: string;
+}
 
 interface ParcelTableProps {
-  userRole: string | null;
+  userRole?: string;
 }
 
 const ParcelTable = ({ userRole }: ParcelTableProps) => {
   const [parcels, setParcels] = useState<Parcel[]>([]);
+  const [userProfiles, setUserProfiles] = useState<Record<string, string>>({});
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
-  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const isMobile = useIsMobile();
-
   const isAdmin = userRole === "admin";
-  const isEditor = userRole === "editor";
-  const canEdit = isAdmin || isEditor;
+  const canEdit = isAdmin || userRole === "editor";
 
   useEffect(() => {
     fetchParcels();
-  }, []);
+  }, [searchTerm]);
 
   const fetchParcels = async () => {
     try {
-      setIsLoading(true);
-      console.log("Fetching parcels...");
-      
-      const { data, error } = await supabase
-        .from('parcels')
-        .select('*')
-        .order('created_at', { ascending: false });
+      let query = supabase
+        .from("parcels")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error('Database error:', error);
-        throw error;
+      if (searchTerm) {
+        query = query.ilike("lr_no", `%${searchTerm}%`);
       }
 
-      console.log("Fetched parcels:", data);
-      setParcels(data as Parcel[]);
+      const { data: parcelsData, error } = await query;
+
+      if (error) throw error;
+
+      setParcels(parcelsData || []);
+
+      // Fetch user profiles for all unique user IDs
+      const userIds = [...new Set(parcelsData?.map(p => p.user_id) || [])];
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, name")
+        .in("id", userIds);
+
+      if (profilesError) throw profilesError;
+
+      const userProfileMap = (profiles || []).reduce((acc: Record<string, string>, profile: UserProfile) => {
+        acc[profile.id] = profile.name;
+        return acc;
+      }, {});
+
+      setUserProfiles(userProfileMap);
     } catch (error) {
-      console.error('Error fetching parcels:', error);
+      console.error("Error fetching parcels:", error);
       toast({
         title: "Error",
-        description: "Failed to load parcels. Please check your database connection.",
+        description: "Failed to fetch parcels",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleDelete = async (parcelId: string) => {
     try {
-      console.log("Deleting parcel:", parcelId);
-      
       const { error } = await supabase
-        .from('parcels')
+        .from("parcels")
         .delete()
-        .eq('id', parcelId);
+        .eq("id", parcelId);
 
-      if (error) {
-        console.error('Delete error:', error);
-        throw error;
-      }
+      if (error) throw error;
 
+      setParcels((prev) => prev.filter((parcel) => parcel.id !== parcelId));
       toast({
         title: "Success",
         description: "Parcel deleted successfully",
       });
-      
-      fetchParcels();
     } catch (error) {
-      console.error('Error deleting parcel:', error);
+      console.error("Error deleting parcel:", error);
       toast({
         title: "Error",
-        description: "Failed to delete parcel. Please check your database connection.",
+        description: "Failed to delete parcel",
         variant: "destructive",
       });
     }
   };
 
-  const handleView = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setIsViewDialogOpen(true);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="w-full text-center py-8">
-        <p className="text-muted-foreground">Loading parcels...</p>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <div className="mb-4">
-        <ParcelSearch parcels={parcels} onSelect={handleView} />
+    <div className="space-y-4">
+      <ParcelSearch onSearch={setSearchTerm} />
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>LR No</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>No of Parcels</TableHead>
+              <TableHead>Added By</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {parcels.map((parcel) => (
+              <ParcelTableRow
+                key={parcel.id}
+                parcel={parcel}
+                isAdmin={isAdmin}
+                canEdit={canEdit}
+                onView={(parcel) => setSelectedParcel(parcel)}
+                onDelete={handleDelete}
+                isMobile={isMobile}
+                userName={userProfiles[parcel.user_id]}
+              />
+            ))}
+          </TableBody>
+        </Table>
       </div>
-      <div className="w-full rounded-lg border border-purple-100 dark:border-purple-800 transition-all duration-300 hover:border-purple-200 dark:hover:border-purple-700">
-        <div className="overflow-x-auto min-w-full">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-purple-50 dark:bg-purple-900/20">
-                <TableHead className="font-semibold min-w-[100px]">LR No</TableHead>
-                <TableHead className="font-semibold min-w-[100px]">Date</TableHead>
-                <TableHead className="font-semibold min-w-[120px]">No of Parcels</TableHead>
-                <TableHead className="font-semibold text-right min-w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {parcels.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8">
-                    <p className="text-muted-foreground">No parcels found</p>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                parcels.map((parcel) => (
-                  <ParcelTableRow
-                    key={parcel.id}
-                    parcel={parcel}
-                    isAdmin={isAdmin}
-                    canEdit={canEdit}
-                    onView={handleView}
-                    onDelete={handleDelete}
-                    isMobile={isMobile}
-                  />
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-
-      <ParcelViewDialog
-        parcel={selectedParcel}
-        isOpen={isViewDialogOpen}
-        onOpenChange={setIsViewDialogOpen}
-      />
-    </>
+      {selectedParcel && (
+        <ParcelViewDialog
+          parcel={selectedParcel}
+          onClose={() => setSelectedParcel(null)}
+        />
+      )}
+    </div>
   );
 };
 

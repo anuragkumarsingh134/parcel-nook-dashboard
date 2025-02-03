@@ -9,9 +9,10 @@ interface ParcelTableRowProps {
   onView: (parcel: Parcel) => void;
   onDelete: (parcelId: string) => void;
   isMobile: boolean;
+  userName?: string;
 }
 
-const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile }: ParcelTableRowProps) => {
+const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile, userName }: ParcelTableRowProps) => {
   return (
     <TableRow className="hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors">
       <TableCell className="font-medium min-w-[100px] truncate" title={parcel.lr_no}>
@@ -19,6 +20,7 @@ const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile }
       </TableCell>
       <TableCell className="min-w-[100px]">{parcel.date}</TableCell>
       <TableCell className="min-w-[120px]">{parcel.no_of_parcels}</TableCell>
+      <TableCell className="min-w-[120px]">{userName || 'Unknown User'}</TableCell>
       <TableCell className="min-w-[100px]">
         <ParcelActions
           parcel={parcel}
