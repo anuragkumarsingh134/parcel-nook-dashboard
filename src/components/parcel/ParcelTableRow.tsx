@@ -10,6 +10,7 @@ interface ParcelTableRowProps {
   onView: (parcel: Parcel) => void;
   onDelete: (id: string) => void;
   isMobile: boolean;
+  userName?: string;
 }
 
 const ParcelTableRow = ({
@@ -19,6 +20,7 @@ const ParcelTableRow = ({
   onView,
   onDelete,
   isMobile,
+  userName,
 }: ParcelTableRowProps) => {
   return (
     <TableRow>
@@ -27,8 +29,7 @@ const ParcelTableRow = ({
         <>
           <TableCell>{parcel.date}</TableCell>
           <TableCell>{parcel.no_of_parcels}</TableCell>
-          <TableCell>{parcel.item_name}</TableCell>
-          <TableCell>{parcel.quantity}</TableCell>
+          <TableCell>{userName}</TableCell>
         </>
       )}
       <TableCell>
