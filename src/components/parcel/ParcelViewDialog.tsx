@@ -23,7 +23,7 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
             Parcel Details
           </DialogTitle>
         </DialogHeader>
-        <div className="grid md:grid-cols-2 gap-6 py-4 h-full">
+        <div className="grid md:grid-cols-2 gap-4 p-2">
           {/* Left column for text information */}
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -49,11 +49,11 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
           </div>
           
           {/* Right column for images */}
-          <div className="grid grid-rows-2 gap-4 h-full">
+          <div className="grid grid-rows-2 gap-4">
             {parcel.item_photo && (
-              <div className="space-y-2">
-                <span className="font-medium text-lg block">Item Photo:</span>
-                <div className="h-[calc(35vh-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div>
+                <span className="font-medium text-lg mb-2 block">Item Photo:</span>
+                <div className="flex items-center justify-center h-[35vh] bg-gray-50/30 dark:bg-gray-800/30">
                   <img
                     src={parcel.item_photo}
                     alt="Item"
@@ -63,9 +63,9 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
               </div>
             )}
             {parcel.parcel_photo && (
-              <div className="space-y-2">
-                <span className="font-medium text-lg block">Parcel Photo:</span>
-                <div className="h-[calc(35vh-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div>
+                <span className="font-medium text-lg mb-2 block">Parcel Photo:</span>
+                <div className="flex items-center justify-center h-[35vh] bg-gray-50/30 dark:bg-gray-800/30">
                   <img
                     src={parcel.parcel_photo}
                     alt="Parcel"
