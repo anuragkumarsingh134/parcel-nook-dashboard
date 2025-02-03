@@ -5,6 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableCell,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import type { Parcel } from "./ParcelForm";
