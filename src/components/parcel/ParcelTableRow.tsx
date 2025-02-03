@@ -1,35 +1,67 @@
+import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import type { Parcel } from "../ParcelForm";
-import ParcelActions from "./ParcelActions";
+import { Edit, Eye, Trash } from "lucide-react";
+import { Parcel } from "@/components/ParcelForm";
 
 interface ParcelTableRowProps {
   parcel: Parcel;
   isAdmin: boolean;
   canEdit: boolean;
   onView: (parcel: Parcel) => void;
-  onDelete: (parcelId: string) => void;
+  onDelete: (id: string) => void;
   isMobile: boolean;
-  userName?: string;
 }
 
-const ParcelTableRow = ({ parcel, isAdmin, canEdit, onView, onDelete, isMobile, userName }: ParcelTableRowProps) => {
+const ParcelTableRow = ({
+  parcel,
+  isAdmin,
+  canEdit,
+  onView,
+  onDelete,
+  isMobile,
+}: ParcelTableRowProps) => {
   return (
-    <TableRow className="hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors">
-      <TableCell className="font-medium min-w-[100px] truncate" title={parcel.lr_no}>
-        {parcel.lr_no}
-      </TableCell>
-      <TableCell className="min-w-[100px]">{parcel.date}</TableCell>
-      <TableCell className="min-w-[120px]">{parcel.no_of_parcels}</TableCell>
-      <TableCell className="min-w-[120px]">{userName || 'Unknown User'}</TableCell>
-      <TableCell className="min-w-[100px]">
-        <ParcelActions
-          parcel={parcel}
-          isAdmin={isAdmin}
-          canEdit={canEdit}
-          onView={onView}
-          onDelete={onDelete}
-          isMobile={isMobile}
-        />
+    <TableRow>
+      <TableCell className="font-medium">{parcel.lr_no}</TableCell>
+      {!isMobile && (
+        <>
+          <TableCell>{parcel.date}</TableCell>
+          <TableCell>{parcel.no_of_parcels}</TableCell>
+          <TableCell>{parcel.item_name}</TableCell>
+          <TableCell>{parcel.quantity}</TableCell>
+        </>
+      )}
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onView(parcel)}
+            className="h-8 w-8"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+          {canEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => window.location.href = `/edit-parcel/${parcel.id}`}
+              className="h-8 w-8"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
+          {isAdmin && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete(parcel.id)}
+              className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </TableCell>
     </TableRow>
   );

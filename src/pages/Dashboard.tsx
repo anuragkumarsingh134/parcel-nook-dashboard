@@ -6,6 +6,7 @@ import UserManagement from "@/components/UserManagement";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
+import Navigation from "@/components/Navigation";
 import {
   Sheet,
   SheetContent,
@@ -49,6 +50,7 @@ const Dashboard = () => {
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-3">
+            <Navigation />
             {canManageParcels && (
               <Link to="/add-parcel">
                 <Button className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl">
