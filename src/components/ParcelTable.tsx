@@ -30,6 +30,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
   const [userProfiles, setUserProfiles] = useState<Record<string, string>>({});
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -128,7 +129,10 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
                 parcel={parcel}
                 isAdmin={isAdmin}
                 canEdit={canEdit}
-                onView={(parcel) => setSelectedParcel(parcel)}
+                onView={(parcel) => {
+                  setSelectedParcel(parcel);
+                  setIsDialogOpen(true);
+                }}
                 onDelete={handleDelete}
                 isMobile={isMobile}
                 userName={userProfiles[parcel.user_id]}
@@ -140,7 +144,8 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
       {selectedParcel && (
         <ParcelViewDialog
           parcel={selectedParcel}
-          onClose={() => setSelectedParcel(null)}
+          isOpen={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
         />
       )}
     </div>
