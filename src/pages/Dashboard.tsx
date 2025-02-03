@@ -42,14 +42,14 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="container max-w-7xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div className="container max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 sm:mb-8">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
+            <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
               LR DATA
             </h1>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Navigation />
             {canManageParcels && (
               <Link to="/add-parcel">
@@ -94,7 +94,7 @@ const Dashboard = () => {
             </Button>
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 animate-fade-in">
+        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-md sm:shadow-xl p-3 sm:p-6 animate-fade-in overflow-x-auto">
           <ParcelTable userRole={userRole} />
         </div>
       </div>
