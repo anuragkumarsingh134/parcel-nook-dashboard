@@ -6,6 +6,7 @@ import DeleteUserButton from "./DeleteUserButton";
 interface UserProfile {
   id: string;
   email: string;
+  name: string;
   status: string;
   user_roles: { role: "admin" | "editor" | "viewer" }[];
 }
@@ -21,7 +22,7 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
       <div className="space-y-4">
         <div>
           <span className="font-medium text-lg" title={user.email}>
-            {user.email}
+            {user.name}
           </span>
         </div>
         

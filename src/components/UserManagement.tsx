@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 interface UserProfile {
   id: string;
   email: string;
+  name: string;
   status: string;
   user_roles: { role: "admin" | "editor" | "viewer" }[];
 }
@@ -19,7 +20,7 @@ const UserManagement = () => {
       try {
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("id, email, status");
+          .select("id, email, name, status");
 
         if (profilesError) {
           console.error("Error fetching profiles:", profilesError);

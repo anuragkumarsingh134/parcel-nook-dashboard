@@ -1,9 +1,9 @@
-import { Table, TableBody } from "@/components/ui/table";
 import UserTableRow from "./UserTableRow";
 
 interface UserProfile {
   id: string;
   email: string;
+  name: string;
   status: string;
   user_roles: { role: "admin" | "editor" | "viewer" }[];
 }
