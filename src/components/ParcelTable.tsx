@@ -39,6 +39,44 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
 
   useEffect(() => {
     fetchParcels();
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel('public:parcels')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all changes (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'parcels'
+        },
+        (payload) => {
+          console.log('Real-time update received:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            setParcels((current) => [payload.new as Parcel, ...current]);
+            toast({
+              title: "New Parcel Added",
+              description: `LR No: ${(payload.new as Parcel).lr_no}`,
+            });
+          } else if (payload.eventType === 'DELETE') {
+            setParcels((current) => 
+              current.filter((parcel) => parcel.id !== payload.old.id)
+            );
+          } else if (payload.eventType === 'UPDATE') {
+            setParcels((current) =>
+              current.map((parcel) =>
+                parcel.id === payload.new.id ? payload.new as Parcel : parcel
+              )
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [searchTerm]);
 
   const fetchParcels = async () => {
