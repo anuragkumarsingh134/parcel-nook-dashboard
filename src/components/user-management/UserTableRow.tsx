@@ -48,7 +48,7 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
           </div>
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell">
+      <TableCell className="hidden md:table-cell whitespace-nowrap">
         <StatusBadge status={user.status} />
       </TableCell>
       <TableCell className="hidden md:table-cell">
@@ -59,7 +59,7 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
           onRoleUpdate={onUpdate}
         />
       </TableCell>
-      <TableCell className="hidden md:table-cell">
+      <TableCell className="hidden md:table-cell whitespace-nowrap">
         <div className="flex flex-wrap gap-2">
           {user.status === "pending" && (
             <UserActions userId={user.id} onStatusUpdate={onUpdate} />
