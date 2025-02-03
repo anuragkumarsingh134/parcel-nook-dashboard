@@ -25,11 +25,13 @@ const Navigation = () => {
     fetchUserName();
   }, [user]);
 
+  const displayName = userName || user?.email || user?.email?.split('@')[0] || 'User';
+
   return (
     <div className="flex items-center gap-2 text-purple-600 dark:text-purple-300">
       <UserRound className="h-4 w-4" />
       <span className="text-sm font-medium">
-        {userName || user?.email?.split('@')[0]}
+        {displayName}
       </span>
     </div>
   );
