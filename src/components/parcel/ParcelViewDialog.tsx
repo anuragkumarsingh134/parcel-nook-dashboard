@@ -4,92 +4,66 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import type { Parcel } from "../ParcelForm";
 
 interface ParcelViewDialogProps {
   parcel: Parcel | null;
-  onClose: () => void;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const ParcelViewDialog = ({ parcel, onClose }: ParcelViewDialogProps) => {
+const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProps) => {
   if (!parcel) return null;
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl overflow-y-auto max-h-[90vh] bg-gradient-to-b from-background to-background/80 dark:from-gray-900 dark:to-purple-900/20">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
             Parcel Details
           </DialogTitle>
         </DialogHeader>
-        
-        <div className="mt-6 space-y-8 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
-          {/* Basic Information Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-purple-600 dark:text-purple-400 border-b pb-2">
-              Basic Information
-            </h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-2 items-center">
-                <span className="text-muted-foreground">LR No:</span>
-                <span className="font-medium text-right">{parcel.lr_no}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-center">
-                <span className="text-muted-foreground">Date:</span>
-                <span className="font-medium text-right">{parcel.date}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-center">
-                <span className="text-muted-foreground">No of Parcels:</span>
-                <span className="font-medium text-right">{parcel.no_of_parcels}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-center">
-                <span className="text-muted-foreground">Item Name:</span>
-                <span className="font-medium text-right">{parcel.item_name}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-center">
-                <span className="text-muted-foreground">Quantity:</span>
-                <span className="font-medium text-right">{parcel.quantity}</span>
-              </div>
-            </div>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <span className="font-medium">LR No:</span>
+            <span className="col-span-3">{parcel.lr_no}</span>
           </div>
-
-          {/* Photos Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-purple-600 dark:text-purple-400 border-b pb-2">
-              Photos
-            </h3>
-            <div className="space-y-6">
-              {parcel.item_photo && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">Item Photo:</p>
-                  <div className="overflow-hidden rounded-lg border bg-muted">
-                    <AspectRatio ratio={4/3} className="bg-muted">
-                      <img 
-                        src={parcel.item_photo} 
-                        alt="Item" 
-                        className="object-contain w-full h-full"
-                      />
-                    </AspectRatio>
-                  </div>
-                </div>
-              )}
-              {parcel.parcel_photo && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">Parcel Photo:</p>
-                  <div className="overflow-hidden rounded-lg border bg-muted">
-                    <AspectRatio ratio={4/3} className="bg-muted">
-                      <img 
-                        src={parcel.parcel_photo} 
-                        alt="Parcel" 
-                        className="object-contain w-full h-full"
-                      />
-                    </AspectRatio>
-                  </div>
-                </div>
-              )}
-            </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <span className="font-medium">Date:</span>
+            <span className="col-span-3">{parcel.date}</span>
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <span className="font-medium">No of Parcels:</span>
+            <span className="col-span-3">{parcel.no_of_parcels}</span>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <span className="font-medium">Item Name:</span>
+            <span className="col-span-3">{parcel.item_name}</span>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <span className="font-medium">Quantity:</span>
+            <span className="col-span-3">{parcel.quantity}</span>
+          </div>
+          {parcel.item_photo && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="font-medium">Item Photo:</span>
+              <img
+                src={parcel.item_photo}
+                alt="Item"
+                className="col-span-3 rounded-lg border border-purple-200 dark:border-purple-800"
+              />
+            </div>
+          )}
+          {parcel.parcel_photo && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="font-medium">Parcel Photo:</span>
+              <img
+                src={parcel.parcel_photo}
+                alt="Parcel"
+                className="col-span-3 rounded-lg border border-purple-200 dark:border-purple-800"
+              />
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
