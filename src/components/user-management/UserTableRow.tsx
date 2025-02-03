@@ -22,9 +22,9 @@ interface UserTableRowProps {
 const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
   return (
     <TableRow>
-      <TableCell className="break-all md:w-[35%]">
+      <TableCell className="max-w-[200px]">
         <div className="flex flex-col space-y-4">
-          <span className="block font-medium" title={user.email}>
+          <span className="block font-medium truncate" title={user.email}>
             {user.email}
           </span>
           <div className="block md:hidden flex flex-col space-y-4">
@@ -57,10 +57,10 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
           </div>
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell md:w-[15%]">
+      <TableCell className="hidden md:table-cell w-[120px]">
         <StatusBadge status={user.status} />
       </TableCell>
-      <TableCell className="hidden md:table-cell md:w-[20%]">
+      <TableCell className="hidden md:table-cell w-[150px]">
         <UserRoleSelect
           userId={user.id}
           currentRole={user.user_roles?.[0]?.role}
@@ -68,7 +68,7 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
           onRoleUpdate={onUpdate}
         />
       </TableCell>
-      <TableCell className="hidden md:table-cell md:w-[30%]">
+      <TableCell className="hidden md:table-cell w-[200px]">
         <div className="flex flex-wrap gap-2">
           {user.status === "pending" && (
             <UserActions userId={user.id} onStatusUpdate={onUpdate} />

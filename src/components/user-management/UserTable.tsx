@@ -16,7 +16,7 @@ interface UserTableProps {
 
 const UserTable = ({ users, onUpdate }: UserTableProps) => {
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full">
       <Table>
         <UserTableHeader />
         <TableBody>
