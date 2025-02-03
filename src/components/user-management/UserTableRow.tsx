@@ -22,45 +22,36 @@ interface UserTableRowProps {
 const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
   return (
     <TableRow>
-      <TableCell className="max-w-[200px]">
+      <TableCell>
         <div className="flex flex-col space-y-4">
-          <span className="block font-medium truncate" title={user.email}>
+          <span className="font-medium" title={user.email}>
             {user.email}
           </span>
-          <div className="block md:hidden flex flex-col space-y-4">
-            <div className="flex flex-col space-y-2">
-              <span className="text-sm text-muted-foreground">Status</span>
-              <StatusBadge status={user.status} />
-            </div>
+          <div className="md:hidden space-y-4">
+            <StatusBadge status={user.status} />
             
-            <div className="flex flex-col space-y-2">
-              <span className="text-sm text-muted-foreground">Role</span>
-              <UserRoleSelect
-                userId={user.id}
-                currentRole={user.user_roles?.[0]?.role}
-                isDisabled={user.status !== "approved"}
-                onRoleUpdate={onUpdate}
-              />
-            </div>
+            <UserRoleSelect
+              userId={user.id}
+              currentRole={user.user_roles?.[0]?.role}
+              isDisabled={user.status !== "approved"}
+              onRoleUpdate={onUpdate}
+            />
 
-            <div className="flex flex-col space-y-2">
-              <span className="text-sm text-muted-foreground">Actions</span>
-              <div className="flex flex-wrap gap-2">
-                {user.status === "pending" && (
-                  <UserActions userId={user.id} onStatusUpdate={onUpdate} />
-                )}
-                {user.user_roles?.[0]?.role !== "admin" && (
-                  <DeleteUserButton userId={user.id} onUpdate={onUpdate} />
-                )}
-              </div>
+            <div className="flex flex-wrap gap-2">
+              {user.status === "pending" && (
+                <UserActions userId={user.id} onStatusUpdate={onUpdate} />
+              )}
+              {user.user_roles?.[0]?.role !== "admin" && (
+                <DeleteUserButton userId={user.id} onUpdate={onUpdate} />
+              )}
             </div>
           </div>
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell w-[120px]">
+      <TableCell className="hidden md:table-cell">
         <StatusBadge status={user.status} />
       </TableCell>
-      <TableCell className="hidden md:table-cell w-[150px]">
+      <TableCell className="hidden md:table-cell">
         <UserRoleSelect
           userId={user.id}
           currentRole={user.user_roles?.[0]?.role}
@@ -68,7 +59,7 @@ const UserTableRow = ({ user, onUpdate }: UserTableRowProps) => {
           onRoleUpdate={onUpdate}
         />
       </TableCell>
-      <TableCell className="hidden md:table-cell w-[200px]">
+      <TableCell className="hidden md:table-cell">
         <div className="flex flex-wrap gap-2">
           {user.status === "pending" && (
             <UserActions userId={user.id} onStatusUpdate={onUpdate} />
