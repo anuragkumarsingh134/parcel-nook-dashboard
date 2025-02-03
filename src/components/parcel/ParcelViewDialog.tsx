@@ -9,15 +9,14 @@ import type { Parcel } from "../ParcelForm";
 
 interface ParcelViewDialogProps {
   parcel: Parcel | null;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
 }
 
-const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProps) => {
+const ParcelViewDialog = ({ parcel, onClose }: ParcelViewDialogProps) => {
   if (!parcel) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl overflow-y-auto max-h-[90vh] bg-gradient-to-b from-background to-background/80 dark:from-gray-900 dark:to-purple-900/20">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
