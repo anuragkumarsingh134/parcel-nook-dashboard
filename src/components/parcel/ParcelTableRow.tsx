@@ -24,8 +24,8 @@ const ParcelTableRow = ({
     <>
       <TableRow>
         <TableCell className="font-medium">{parcel.lr_no}</TableCell>
-        <TableCell>{parcel.date}</TableCell>
-        <TableCell>{parcel.no_of_parcels}</TableCell>
+        <TableCell className="text-left whitespace-nowrap">{parcel.date}</TableCell>
+        <TableCell className="text-center">{parcel.no_of_parcels}</TableCell>
         {!isMobile && (
           <TableCell className="text-right">
             <div className="flex items-center gap-2 justify-end">
