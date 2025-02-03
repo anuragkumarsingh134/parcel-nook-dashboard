@@ -73,7 +73,7 @@ const UserManagement = () => {
   return (
     <div className="flex flex-col h-full max-w-full">
       <h2 className="text-2xl font-bold p-6">User Management</h2>
-      <div className="flex-1 px-6 overflow-hidden">
+      <div className="flex-1 px-6 w-[1200px] overflow-hidden">
         <UserTable users={users || []} onUpdate={refetch} />
       </div>
     </div>
