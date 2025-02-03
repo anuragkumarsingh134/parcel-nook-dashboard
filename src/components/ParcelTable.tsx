@@ -101,7 +101,6 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
               <TableHead className="w-[200px] font-semibold text-purple-900 dark:text-purple-100">LR No</TableHead>
               <TableHead className="w-[150px] font-semibold text-purple-900 dark:text-purple-100">Date</TableHead>
               <TableHead className="w-[150px] font-semibold text-purple-900 dark:text-purple-100">No of Parcels</TableHead>
-              <TableHead className="w-[120px] text-right font-semibold text-purple-900 dark:text-purple-100">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
