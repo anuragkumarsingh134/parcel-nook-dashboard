@@ -1,5 +1,4 @@
 import { Table, TableBody } from "@/components/ui/table";
-import UserTableHeader from "./UserTableHeader";
 import UserTableRow from "./UserTableRow";
 
 interface UserProfile {
@@ -16,15 +15,10 @@ interface UserTableProps {
 
 const UserTable = ({ users, onUpdate }: UserTableProps) => {
   return (
-    <div className="w-full">
-      <Table>
-        <UserTableHeader />
-        <TableBody>
-          {users?.map((user) => (
-            <UserTableRow key={user.id} user={user} onUpdate={onUpdate} />
-          ))}
-        </TableBody>
-      </Table>
+    <div className="w-full space-y-4">
+      {users?.map((user) => (
+        <UserTableRow key={user.id} user={user} onUpdate={onUpdate} />
+      ))}
     </div>
   );
 };
