@@ -23,7 +23,7 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
             Parcel Details
           </DialogTitle>
         </DialogHeader>
-        <div className="grid md:grid-cols-2 gap-6 py-4 h-full overflow-y-auto md:overflow-hidden">
+        <div className="grid md:grid-cols-2 gap-6 py-4 h-full">
           {/* Left column for text information */}
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -49,25 +49,29 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
           </div>
           
           {/* Right column for images */}
-          <div className="space-y-6">
+          <div className="grid grid-rows-2 gap-4 h-full">
             {parcel.item_photo && (
               <div className="space-y-2">
                 <span className="font-medium text-lg block">Item Photo:</span>
-                <img
-                  src={parcel.item_photo}
-                  alt="Item"
-                  className="w-full h-[200px] object-contain rounded-lg border border-purple-200 dark:border-purple-800"
-                />
+                <div className="h-[calc(35vh-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                  <img
+                    src={parcel.item_photo}
+                    alt="Item"
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
               </div>
             )}
             {parcel.parcel_photo && (
               <div className="space-y-2">
                 <span className="font-medium text-lg block">Parcel Photo:</span>
-                <img
-                  src={parcel.parcel_photo}
-                  alt="Parcel"
-                  className="w-full h-[200px] object-contain rounded-lg border border-purple-200 dark:border-purple-800"
-                />
+                <div className="h-[calc(35vh-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                  <img
+                    src={parcel.parcel_photo}
+                    alt="Parcel"
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
               </div>
             )}
           </div>
