@@ -27,7 +27,6 @@ interface ParcelTableProps {
 
 const ParcelTable = ({ userRole }: ParcelTableProps) => {
   const [parcels, setParcels] = useState<Parcel[]>([]);
-  const [userProfiles, setUserProfiles] = useState<Record<string, string>>({});
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -58,22 +57,6 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
       if (error) throw error;
 
       setParcels(parcelsData || []);
-
-      // Fetch user profiles for all unique user IDs
-      const userIds = [...new Set(parcelsData?.map(p => p.user_id) || [])];
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
-        .select("id, name")
-        .in("id", userIds);
-
-      if (profilesError) throw profilesError;
-
-      const userProfileMap = (profiles || []).reduce((acc: Record<string, string>, profile: UserProfile) => {
-        acc[profile.id] = profile.name;
-        return acc;
-      }, {});
-
-      setUserProfiles(userProfileMap);
     } catch (error) {
       console.error("Error fetching parcels:", error);
       toast({
@@ -118,7 +101,6 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
               <TableHead>LR No</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>No of Parcels</TableHead>
-              <TableHead>Added By</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -135,7 +117,6 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
                 }}
                 onDelete={handleDelete}
                 isMobile={isMobile}
-                userName={userProfiles[parcel.user_id]}
               />
             ))}
           </TableBody>
