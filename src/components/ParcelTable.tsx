@@ -56,6 +56,7 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
 
       if (error) throw error;
 
+      console.log("Fetched parcels:", parcelsData); // Debug log
       setParcels(parcelsData || []);
     } catch (error) {
       console.error("Error fetching parcels:", error);
@@ -98,9 +99,20 @@ const ParcelTable = ({ userRole }: ParcelTableProps) => {
         <Table>
           <TableHeader>
             <TableRow className="bg-purple-50/50 dark:bg-purple-900/20">
-              <TableHead className="w-[200px] font-semibold text-purple-900 dark:text-purple-100">LR No</TableHead>
-              <TableHead className="w-[150px] font-semibold text-purple-900 dark:text-purple-100">Date</TableHead>
-              <TableHead className="w-[150px] font-semibold text-purple-900 dark:text-purple-100">No of Parcels</TableHead>
+              <TableHead className="w-[200px] font-semibold text-purple-900 dark:text-purple-100">
+                LR No
+              </TableHead>
+              <TableHead className="w-[150px] font-semibold text-purple-900 dark:text-purple-100">
+                Date
+              </TableHead>
+              <TableHead className="w-[150px] font-semibold text-purple-900 dark:text-purple-100">
+                No of Parcels
+              </TableHead>
+              {!isMobile && (
+                <TableHead className="w-[120px] text-right font-semibold text-purple-900 dark:text-purple-100">
+                  Actions
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>

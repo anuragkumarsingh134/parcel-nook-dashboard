@@ -24,47 +24,79 @@ const ParcelTableRow = ({
     <>
       <TableRow>
         <TableCell className="font-medium">{parcel.lr_no}</TableCell>
+        <TableCell>{parcel.date}</TableCell>
+        <TableCell>{parcel.no_of_parcels}</TableCell>
         {!isMobile && (
-          <>
-            <TableCell>{parcel.date}</TableCell>
-            <TableCell>{parcel.no_of_parcels}</TableCell>
-          </>
-        )}
-      </TableRow>
-      <TableRow className="border-0">
-        <TableCell colSpan={4} className="py-0 pt-0">
-          <div className="flex items-center gap-2 justify-end pb-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onView(parcel)}
-              className="h-8 w-8"
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
-            {canEdit && (
+          <TableCell className="text-right">
+            <div className="flex items-center gap-2 justify-end">
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => window.location.href = `/edit-parcel/${parcel.id}`}
+                onClick={() => onView(parcel)}
                 className="h-8 w-8"
               >
-                <Edit className="h-4 w-4" />
+                <Eye className="h-4 w-4" />
               </Button>
-            )}
-            {isAdmin && (
+              {canEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => window.location.href = `/edit-parcel/${parcel.id}`}
+                  className="h-8 w-8"
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+              )}
+              {isAdmin && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDelete(parcel.id)}
+                  className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <Trash className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </TableCell>
+        )}
+      </TableRow>
+      {isMobile && (
+        <TableRow className="border-0">
+          <TableCell colSpan={4} className="py-0 pt-0">
+            <div className="flex items-center gap-2 justify-end pb-4">
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => onDelete(parcel.id)}
-                className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                onClick={() => onView(parcel)}
+                className="h-8 w-8"
               >
-                <Trash className="h-4 w-4" />
+                <Eye className="h-4 w-4" />
               </Button>
-            )}
-          </div>
-        </TableCell>
-      </TableRow>
+              {canEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => window.location.href = `/edit-parcel/${parcel.id}`}
+                  className="h-8 w-8"
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+              )}
+              {isAdmin && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDelete(parcel.id)}
+                  className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <Trash className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </TableCell>
+        </TableRow>
+      )}
     </>
   );
 };
