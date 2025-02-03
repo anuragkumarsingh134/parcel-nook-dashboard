@@ -15,8 +15,9 @@ export const supabase = createClient<Database>(
       storage: {
         getItem: (key) => {
           try {
-            const item = localStorage.getItem(key);
-            return item;
+            const storedSession = localStorage.getItem(key);
+            console.log('Retrieved session:', key, storedSession ? 'exists' : 'not found');
+            return storedSession;
           } catch (error) {
             console.error('Error accessing localStorage:', error);
             return null;
@@ -24,6 +25,7 @@ export const supabase = createClient<Database>(
         },
         setItem: (key, value) => {
           try {
+            console.log('Storing session:', key);
             localStorage.setItem(key, value);
           } catch (error) {
             console.error('Error setting localStorage:', error);
@@ -31,6 +33,7 @@ export const supabase = createClient<Database>(
         },
         removeItem: (key) => {
           try {
+            console.log('Removing session:', key);
             localStorage.removeItem(key);
           } catch (error) {
             console.error('Error removing from localStorage:', error);
@@ -43,3 +46,8 @@ export const supabase = createClient<Database>(
     }
   }
 );
+
+// Add debug listener for session changes
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log('Auth state changed:', event, session ? 'Session exists' : 'No session');
+});
