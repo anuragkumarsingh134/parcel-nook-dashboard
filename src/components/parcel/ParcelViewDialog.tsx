@@ -23,7 +23,7 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
             Parcel Details
           </DialogTitle>
         </DialogHeader>
-        <div className="grid md:grid-cols-2 gap-4 p-2">
+        <div className="grid md:grid-cols-2 gap-4">
           {/* Left column for text information */}
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -49,11 +49,11 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
           </div>
           
           {/* Right column for images */}
-          <div className="grid grid-rows-2 gap-4">
+          <div className="grid grid-rows-2 gap-2">
             {parcel.item_photo && (
               <div>
-                <span className="font-medium text-lg mb-2 block">Item Photo:</span>
-                <div className="flex items-center justify-center h-[35vh] bg-gray-50/30 dark:bg-gray-800/30">
+                <span className="font-medium text-lg mb-1 block">Item Photo:</span>
+                <div className="flex items-center justify-center h-[40vh]">
                   <img
                     src={parcel.item_photo}
                     alt="Item"
@@ -64,8 +64,8 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
             )}
             {parcel.parcel_photo && (
               <div>
-                <span className="font-medium text-lg mb-2 block">Parcel Photo:</span>
-                <div className="flex items-center justify-center h-[35vh] bg-gray-50/30 dark:bg-gray-800/30">
+                <span className="font-medium text-lg mb-1 block">Parcel Photo:</span>
+                <div className="flex items-center justify-center h-[40vh]">
                   <img
                     src={parcel.parcel_photo}
                     alt="Parcel"
