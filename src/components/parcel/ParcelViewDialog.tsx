@@ -24,43 +24,43 @@ const ParcelViewDialog = ({ parcel, isOpen, onOpenChange }: ParcelViewDialogProp
           </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-            <span className="font-medium md:text-lg">LR No:</span>
-            <span className="col-span-3 md:col-span-1">{parcel.lr_no}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+            <span className="font-medium text-lg">LR No:</span>
+            <span className="md:col-span-3">{parcel.lr_no}</span>
           </div>
-          <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-            <span className="font-medium md:text-lg">Date:</span>
-            <span className="col-span-3 md:col-span-1">{parcel.date}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+            <span className="font-medium text-lg">Date:</span>
+            <span className="md:col-span-3">{parcel.date}</span>
           </div>
-          <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-            <span className="font-medium md:text-lg">No of Parcels:</span>
-            <span className="col-span-3 md:col-span-1">{parcel.no_of_parcels}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+            <span className="font-medium text-lg">No of Parcels:</span>
+            <span className="md:col-span-3">{parcel.no_of_parcels}</span>
           </div>
-          <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-            <span className="font-medium md:text-lg">Item Name:</span>
-            <span className="col-span-3 md:col-span-1">{parcel.item_name}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+            <span className="font-medium text-lg">Item Name:</span>
+            <span className="md:col-span-3">{parcel.item_name}</span>
           </div>
-          <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-            <span className="font-medium md:text-lg">Quantity:</span>
-            <span className="col-span-3 md:col-span-1">{parcel.quantity}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+            <span className="font-medium text-lg">Quantity:</span>
+            <span className="md:col-span-3">{parcel.quantity}</span>
           </div>
           {parcel.item_photo && (
-            <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-              <span className="font-medium md:text-lg">Item Photo:</span>
+            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+              <span className="font-medium text-lg">Item Photo:</span>
               <img
                 src={parcel.item_photo}
                 alt="Item"
-                className="col-span-3 md:col-span-1 rounded-lg border border-purple-200 dark:border-purple-800"
+                className="md:col-span-3 rounded-lg border border-purple-200 dark:border-purple-800"
               />
             </div>
           )}
           {parcel.parcel_photo && (
-            <div className="grid md:grid-cols-1 grid-cols-4 items-center gap-4">
-              <span className="font-medium md:text-lg">Parcel Photo:</span>
+            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+              <span className="font-medium text-lg">Parcel Photo:</span>
               <img
                 src={parcel.parcel_photo}
                 alt="Parcel"
-                className="col-span-3 md:col-span-1 rounded-lg border border-purple-200 dark:border-purple-800"
+                className="md:col-span-3 rounded-lg border border-purple-200 dark:border-purple-800"
               />
             </div>
           )}
