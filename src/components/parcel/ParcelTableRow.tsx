@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Edit, Eye, Trash } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Parcel } from "@/components/ParcelForm";
 
 interface ParcelTableRowProps {
@@ -20,6 +21,12 @@ const ParcelTableRow = ({
   onDelete,
   isMobile,
 }: ParcelTableRowProps) => {
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate(`/edit-parcel/${parcel.id}`);
+  };
+
   return (
     <>
       <TableRow>
@@ -41,7 +48,7 @@ const ParcelTableRow = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => window.location.href = `/edit-parcel/${parcel.id}`}
+                  onClick={handleEdit}
                   className="h-8 w-8"
                 >
                   <Edit className="h-4 w-4" />
@@ -77,7 +84,7 @@ const ParcelTableRow = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => window.location.href = `/edit-parcel/${parcel.id}`}
+                  onClick={handleEdit}
                   className="h-8 w-8"
                 >
                   <Edit className="h-4 w-4" />
